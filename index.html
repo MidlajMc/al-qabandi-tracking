@@ -126,6 +126,19 @@ body {
 }
 .sidebar-badge.blue { background: var(--navy-mid); }
 .sidebar-divider { height: 1px; background: var(--border-light); margin: 8px 0; }
+.sidebar-item .submenu-chevron { margin-left: auto; font-size: 14px; transition: transform 0.18s; color: var(--text-3); }
+.sidebar-item .submenu-chevron.rotated { transform: rotate(180deg); }
+.sidebar-submenu {
+  max-height: 0; overflow: hidden; transition: max-height 0.2s ease;
+}
+.sidebar-submenu.open { max-height: 220px; }
+.sidebar-subitem {
+  display: flex; align-items: center; gap: 8px; padding: 7px 18px 7px 44px; cursor: pointer;
+  font-size: 12px; color: var(--text-2); transition: all 0.12s; user-select: none;
+  border-left: 2px solid transparent;
+}
+.sidebar-subitem:hover { background: var(--bg); color: var(--text); }
+.sidebar-subitem.active { background: var(--gold-pale); color: var(--gold); font-weight: 500; border-left-color: var(--gold); }
 
 /* ── CONTENT ── */
 .content-wrap { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
@@ -344,6 +357,80 @@ select.form-input { cursor: pointer; }
 .progress-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--navy-mid), var(--gold)); transition: width 0.6s ease; }
 .route-dates { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-3); margin-top: 6px; }
 .pct { font-weight: 600; color: var(--navy-mid); font-size: 10.5px; }
+
+/* ── MILESTONE MODAL ── */
+.milestone-overlay {
+  display: none; position: fixed; inset: 0; z-index: 200;
+  background: rgba(13,33,55,0.55); align-items: center; justify-content: center;
+  padding: 24px; backdrop-filter: blur(2px);
+}
+.milestone-overlay.open { display: flex; animation: msFadeIn 0.18s ease; }
+@keyframes msFadeIn { from { opacity: 0; } to { opacity: 1; } }
+.milestone-modal {
+  background: var(--surface); border-radius: var(--radius-lg); width: 440px; max-width: 100%;
+  max-height: 86vh; overflow: hidden; display: flex; flex-direction: column;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.35); animation: msSlideUp 0.22s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes msSlideUp { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.milestone-modal-head {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+  color: #fff; padding: 20px 22px; position: relative; overflow: hidden;
+  display: flex; align-items: flex-start; justify-content: space-between;
+}
+.milestone-modal-head::after {
+  content: ''; position: absolute; right: -30px; top: -30px; width: 130px; height: 130px;
+  border-radius: 50%; background: rgba(255,255,255,0.05); pointer-events: none;
+}
+.milestone-kicker { font-size: 10.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--gold-light); margin-bottom: 6px; }
+.milestone-title { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 10px; }
+.milestone-status-badge {
+  display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; background: rgba(255,255,255,0.12); color: #fff;
+}
+.milestone-status-badge.completed { background: rgba(34,197,94,0.18); color: #86efac; }
+.milestone-status-badge.active { background: rgba(200,149,42,0.22); color: var(--gold-light); }
+.milestone-status-badge::before { content:''; width:6px; height:6px; border-radius:50%; background:currentColor; }
+.milestone-close-x {
+  width: 28px; height: 28px; border-radius: 6px; border: none; background: rgba(255,255,255,0.12);
+  color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer;
+  flex-shrink: 0; position: relative; z-index: 1;
+}
+.milestone-close-x:hover { background: rgba(255,255,255,0.2); }
+.milestone-modal-body { padding: 20px 22px; overflow-y: auto; flex: 1; }
+.milestone-info-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+.milestone-info-icon {
+  width: 34px; height: 34px; border-radius: 8px; background: var(--gold-pale); color: var(--gold);
+  display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
+}
+.milestone-info-label { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 2px; }
+.milestone-info-value { font-size: 14px; font-weight: 600; color: var(--text); }
+.milestone-divider { height: 1px; background: var(--border-light); margin: 4px 0 16px; }
+.milestone-details-label { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 6px; }
+.milestone-details-text { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+.milestone-modal-foot { padding: 14px 22px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 8px; background: var(--bg); }
+
+/* ── MINISTRY SELECTION ── */
+.ministry-option-list { display: flex; flex-direction: column; gap: 8px; }
+.ministry-option {
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+  border: 1.5px solid var(--border); border-radius: var(--radius); cursor: pointer;
+  transition: all 0.12s; position: relative;
+}
+.ministry-option:hover { border-color: var(--navy-light); background: #f5f7fb; }
+.ministry-option.selected { border-color: var(--gold); background: var(--gold-pale); }
+.ministry-option-icon {
+  width: 32px; height: 32px; border-radius: 8px; background: var(--bg2); color: var(--navy-mid);
+  display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
+}
+.ministry-option.selected .ministry-option-icon { background: var(--gold); color: #fff; }
+.ministry-option span { flex: 1; font-size: 13px; font-weight: 500; color: var(--text); }
+.ministry-check { font-size: 16px; color: var(--gold); opacity: 0; transition: opacity 0.12s; }
+.ministry-option.selected .ministry-check { opacity: 1; }
+.ministry-warning {
+  display: none; align-items: center; gap: 6px; margin-top: 10px; font-size: 12px;
+  color: var(--danger); background: var(--danger-bg); padding: 8px 10px; border-radius: var(--radius);
+}
+.ministry-warning.show { display: flex; }
 
 /* ── LOGIN ── */
 .login-screen {
@@ -717,8 +804,15 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
       <!-- Sidebar -->
       <div class="sidebar">
         <div class="sidebar-label">Shipments</div>
-        <div class="sidebar-item active" onclick="setAdminPage('list', this)">
+        <div class="sidebar-item active" onclick="selectAllShipments(this)">
           <i class="ti ti-list"></i> All Shipments <span class="sidebar-badge">14</span>
+          <i class="ti ti-chevron-down submenu-chevron rotated" id="shipmentsChevron"></i>
+        </div>
+        <div class="sidebar-submenu open" id="shipmentsSubmenu">
+          <div class="sidebar-subitem" onclick="filterByMinistry('Ministry of Defence', this)">Ministry of Defence</div>
+          <div class="sidebar-subitem" onclick="filterByMinistry('Ministry of Interior', this)">Ministry of Interior</div>
+          <div class="sidebar-subitem" onclick="filterByMinistry('Ministry of Health', this)">Ministry of Health</div>
+          <div class="sidebar-subitem" onclick="filterByMinistry('Ministry of Foreign Affairs', this)">Ministry of Foreign Affairs</div>
         </div>
         <div class="sidebar-item" onclick="setAdminPage('add', this)">
           <i class="ti ti-plus"></i> Add Shipment
@@ -764,7 +858,7 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
             <div class="page-header">
               <div>
                 <div class="page-title">Shipment Management</div>
-                <div class="page-sub">Al Qabandi & Partners Co. W.L.L. — Kuwait</div>
+                <div class="page-sub" id="adminListSub">Al Qabandi & Partners Co. W.L.L. — Kuwait</div>
               </div>
               <button class="btn btn-primary" onclick="setAdminPage('add', null)">
                 <i class="ti ti-plus"></i> Add Shipment
@@ -826,6 +920,7 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
                     <tr>
                       <th>Shipment ID</th>
                       <th>Shipper Name</th>
+                      <th>Ministry</th>
                       <th>HBL No.</th>
                       <th>Container</th>
                       <th>Port of Loading</th>
@@ -858,6 +953,22 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
               <div class="form-section-title"><i class="ti ti-id"></i> Shipment Identification</div>
               <div class="form-grid">
                 <div class="form-group">
+                  <label class="form-label">Transport Mode</label>
+                  <select class="form-input" id="transportModeSelect" onchange="handleTransportMode(this.value)">
+                    <option>Sea Freight</option>
+                    <option>Air Freight</option>
+                    <option>Road Freight</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Shipment Type</label>
+                  <select class="form-input">
+                    <option>FCL</option>
+                    <option>LCL</option>
+                    <option>Bulk</option>
+                  </select>
+                </div>
+                <div class="form-group">
                   <label class="form-label">Shipment ID</label>
                   <input class="form-input" placeholder="e.g. SIGN-P00865" value="SIGN-P00865">
                 </div>
@@ -866,12 +977,20 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
                   <input class="form-input" type="date">
                 </div>
                 <div class="form-group">
-                  <label class="form-label">HBL Number</label>
-                  <input class="form-input" placeholder="House Bill of Lading No.">
+                  <label class="form-label" id="hblLabel">HBL Number</label>
+                  <input class="form-input" id="hblInput" placeholder="House Bill of Lading No.">
                 </div>
                 <div class="form-group">
-                  <label class="form-label">MBL Number</label>
-                  <input class="form-input" placeholder="Master Bill of Lading No.">
+                  <label class="form-label" id="mblLabel">MBL Number</label>
+                  <input class="form-input" id="mblInput" placeholder="Master Bill of Lading No.">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Date of Receipt</label>
+                  <input class="form-input" type="date">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Transaction Number</label>
+                  <input class="form-input" placeholder="e.g. TXN-2026-00451">
                 </div>
               </div>
             </div>
@@ -902,12 +1021,12 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
               <div class="form-section-title"><i class="ti ti-route"></i> Route & Vessel Details</div>
               <div class="form-grid">
                 <div class="form-group">
-                  <label class="form-label">Port of Loading (POL)</label>
-                  <input class="form-input" placeholder="e.g. Xiamen, China">
+                  <label class="form-label" id="polLabel">Port of Loading (POL)</label>
+                  <input class="form-input" id="polInput" placeholder="e.g. Xiamen, China">
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Port of Discharge (POD)</label>
-                  <input class="form-input" value="Shuaiba, Kuwait">
+                  <label class="form-label" id="podLabel">Port of Discharge (POD)</label>
+                  <input class="form-input" id="podInput" value="Shuaiba, Kuwait">
                 </div>
                 <div class="form-group">
                   <label class="form-label">ETD (Departure)</label>
@@ -918,28 +1037,12 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
                   <input class="form-input" type="date">
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Shipping Line</label>
-                  <input class="form-input" placeholder="e.g. MAERSK">
+                  <label class="form-label" id="shippingLineLabel">Shipping Line</label>
+                  <input class="form-input" id="shippingLineInput" placeholder="e.g. MAERSK">
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Vessel Name</label>
-                  <input class="form-input" placeholder="e.g. MAERSK YORKTOWN">
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Transport Mode</label>
-                  <select class="form-input">
-                    <option>Sea Freight</option>
-                    <option>Air Freight</option>
-                    <option>Road Freight</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Shipment Type</label>
-                  <select class="form-input">
-                    <option>FCL</option>
-                    <option>LCL</option>
-                    <option>Bulk</option>
-                  </select>
+                  <label class="form-label" id="vesselLabel">Vessel Name</label>
+                  <input class="form-input" id="vesselInput" placeholder="e.g. MAERSK YORKTOWN">
                 </div>
               </div>
             </div>
@@ -992,6 +1095,40 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
               </div>
             </div>
 
+            <div class="form-section" id="airCustomsSection" style="display:none;">
+              <div class="form-section-title"><i class="ti ti-receipt-2"></i> Customs Clearance & Financial Details</div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Foreign Contract Invoice Number</label>
+                  <input class="form-input" placeholder="e.g. FCI-2026-0142">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Invoice Amount</label>
+                  <input class="form-input" type="number" placeholder="e.g. 4500">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Customs Declaration Number</label>
+                  <input class="form-input" placeholder="e.g. CD-2026-0891">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Customs Declaration Date</label>
+                  <input class="form-input" type="date">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Amount of Paid Customs Duty</label>
+                  <input class="form-input" type="number" placeholder="e.g. 225">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Bank Receipt Number</label>
+                  <input class="form-input" placeholder="e.g. BR-2026-3390">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Bank Receipt Date</label>
+                  <input class="form-input" type="date">
+                </div>
+              </div>
+            </div>
+
             <div class="form-section">
               <div class="form-section-title"><i class="ti ti-file"></i> Documents Upload</div>
               <div class="upload-grid">
@@ -1004,7 +1141,7 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
 
             <div class="form-actions">
               <button class="btn" onclick="setAdminPage('list', null)">Cancel</button>
-              <button class="btn btn-primary" onclick="showSaved()"><i class="ti ti-device-floppy"></i> Save Shipment</button>
+              <button class="btn btn-primary" onclick="openMinistryModal()"><i class="ti ti-device-floppy"></i> Save Shipment</button>
             </div>
           </div>
 
@@ -1111,26 +1248,133 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
       </div>
     </div>
 
+    <!-- ═══ MILESTONE MODAL ═══ -->
+    <div class="milestone-overlay" id="milestoneOverlay" onclick="if(event.target===this) closeMilestone()">
+      <div class="milestone-modal">
+        <div class="milestone-modal-head">
+          <div>
+            <div class="milestone-kicker">Tracking Milestone</div>
+            <div class="milestone-title" id="msTitle">Booking Confirmed</div>
+            <span class="milestone-status-badge" id="msStatusBadge">Completed</span>
+          </div>
+          <button class="milestone-close-x" onclick="closeMilestone()"><i class="ti ti-x"></i></button>
+        </div>
+        <div class="milestone-modal-body">
+          <div class="milestone-info-row">
+            <div class="milestone-info-icon"><i class="ti ti-map-pin"></i></div>
+            <div>
+              <div class="milestone-info-label">Location</div>
+              <div class="milestone-info-value" id="msLocation">—</div>
+            </div>
+          </div>
+          <div class="milestone-info-row">
+            <div class="milestone-info-icon"><i class="ti ti-calendar"></i></div>
+            <div>
+              <div class="milestone-info-label">Date</div>
+              <div class="milestone-info-value" id="msDate">—</div>
+            </div>
+          </div>
+          <div class="milestone-info-row">
+            <div class="milestone-info-icon"><i class="ti ti-anchor"></i></div>
+            <div>
+              <div class="milestone-info-label">Vessel / Carrier</div>
+              <div class="milestone-info-value" id="msVessel">—</div>
+            </div>
+          </div>
+          <div class="milestone-info-row">
+            <div class="milestone-info-icon"><i class="ti ti-package"></i></div>
+            <div>
+              <div class="milestone-info-label">Shipment</div>
+              <div class="milestone-info-value" id="msShipment">—</div>
+            </div>
+          </div>
+          <div class="milestone-divider"></div>
+          <div class="milestone-details-label">Details</div>
+          <div class="milestone-details-text" id="msDetails">—</div>
+        </div>
+        <div class="milestone-modal-foot">
+          <button class="btn" onclick="closeMilestone()">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ MINISTRY SELECTION MODAL ═══ -->
+    <div class="milestone-overlay" id="ministryOverlay" onclick="if(event.target===this) closeMinistryModal()">
+      <div class="milestone-modal" style="width:400px;">
+        <div class="milestone-modal-head">
+          <div>
+            <div class="milestone-kicker">Before Saving</div>
+            <div class="milestone-title" style="font-size:18px;">Select Ministry Category</div>
+          </div>
+          <button class="milestone-close-x" onclick="closeMinistryModal()"><i class="ti ti-x"></i></button>
+        </div>
+        <div class="milestone-modal-body">
+          <div class="milestone-details-text" style="margin-bottom:14px;">Choose which ministry this shipment should be filed under.</div>
+          <div class="ministry-option-list" id="ministryOptionList">
+            <div class="ministry-option" onclick="selectMinistryOption(this,'Ministry of Defence')">
+              <div class="ministry-option-icon"><i class="ti ti-shield-check"></i></div>
+              <span>Ministry of Defence</span>
+              <i class="ti ti-check ministry-check"></i>
+            </div>
+            <div class="ministry-option" onclick="selectMinistryOption(this,'Ministry of Interior')">
+              <div class="ministry-option-icon"><i class="ti ti-building-bank"></i></div>
+              <span>Ministry of Interior</span>
+              <i class="ti ti-check ministry-check"></i>
+            </div>
+            <div class="ministry-option" onclick="selectMinistryOption(this,'Ministry of Health')">
+              <div class="ministry-option-icon"><i class="ti ti-heartbeat"></i></div>
+              <span>Ministry of Health</span>
+              <i class="ti ti-check ministry-check"></i>
+            </div>
+            <div class="ministry-option" onclick="selectMinistryOption(this,'Ministry of Foreign Affairs')">
+              <div class="ministry-option-icon"><i class="ti ti-world"></i></div>
+              <span>Ministry of Foreign Affairs</span>
+              <i class="ti ti-check ministry-check"></i>
+            </div>
+          </div>
+          <div class="ministry-warning" id="ministryWarning">Please select a ministry to continue.</div>
+        </div>
+        <div class="milestone-modal-foot">
+          <button class="btn" onclick="closeMinistryModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="confirmMinistrySave()"><i class="ti ti-check"></i> Confirm & Save</button>
+        </div>
+      </div>
+    </div>
+
   </div><!-- app-body -->
 </div><!-- mainApp -->
 
 <script>
 // ─── DATA ───
+// ─── MINISTRY ID PREFIXES ───
+const ministryPrefix = {
+  'Ministry of Defence': 'AMOD',
+  'Ministry of Interior': 'AMOI',
+  'Ministry of Health': 'AMOH',
+  'Ministry of Foreign Affairs': 'AMOFA',
+};
+function displayId(s) {
+  if (currentMinistryFilter && s.ministry === currentMinistryFilter && ministryPrefix[s.ministry]) {
+    return s.id.replace('SIGN', ministryPrefix[s.ministry]);
+  }
+  return s.id;
+}
+
 const shipments = [
-  {id:'SIGN-P00851',shipper:'Fujian Yiboyou',hbl:'WOLSZSE25082945',mbl:'MAEU258177596',container:'CLHU9076863',ctype:'40HC',pol:'Xiamen, China',pod:'Shuaiba, Kuwait',etd:'28/07/2025',eta:'20/08/2025',status:'transit',progress:60,line:'MAERSK',vessel:'MAERSK YORKTOWN 534N',cargo:'Plastic Foods',volume:'1×40',qty:'400 units / 60 pallets',weight:'24,000 kg'},
-  {id:'SIGN-P00852',shipper:'Yuyao Hualun Import',hbl:'HSW2508965',mbl:'HLCUXIA2508123',container:'FANU5583691',ctype:'40GP',pol:'Shanghai, China',pod:'Shuaiba, Kuwait',etd:'14/07/2025',eta:'15/08/2025',status:'arrived',progress:100,line:'HAPAG-LLOYD',vessel:'SOPHIA 021E',cargo:'Kitchenware',volume:'1×40',qty:'300 units',weight:'18,000 kg'},
-  {id:'SIGN-P00853',shipper:'Zhejiang Holding Co',hbl:'WOLSZSE25082256',mbl:'COSU2508331',container:'MSDU1918773',ctype:'20GP',pol:'Xiamen, China',pod:'Shuaiba, Kuwait',etd:'02/06/2025',eta:'03/07/2025',status:'arrived',progress:100,line:'COSCO',vessel:'COSCO HARMONY',cargo:'Hardware',volume:'1×20',qty:'500 units',weight:'12,000 kg'},
-  {id:'SIGN-P00854',shipper:'Kingster Kitchen',hbl:'WHSES12545',mbl:'HLCU2508456',container:'CLHU9076863',ctype:'40HC',pol:'Ningbo, China',pod:'Shuaiba, Kuwait',etd:'01/05/2025',eta:'03/06/2025',status:'customs',progress:85,line:'HAPAG-LLOYD',vessel:'MÜNSTERLAND',cargo:'Kitchen Equipment',volume:'1×40HC',qty:'250 units',weight:'15,600 kg'},
-  {id:'SIGN-P00855',shipper:'Xiamen Yamat',hbl:'HSW2508965',mbl:'MAEU2508221',container:'CAIU9076863',ctype:'40GP',pol:'Xiamen, China',pod:'Shuaiba, Kuwait',etd:'21/03/2025',eta:'23/04/2025',status:'arrived',progress:100,line:'MAERSK',vessel:'MAERSK CALLAO',cargo:'Electronics',volume:'1×40',qty:'600 units',weight:'21,000 kg'},
-  {id:'SIGN-P00856',shipper:'Perfect Wares',hbl:'WHSWE02145',mbl:'OOLU2508001',container:'MSDU9087852',ctype:'20GP',pol:'Shanghai, China',pod:'Shuaiba, Kuwait',etd:'14/02/2025',eta:'15/03/2025',status:'arrived',progress:100,line:'OOCL',vessel:'OOCL BEIJING',cargo:'General Merchandise',volume:'1×20',qty:'480 units',weight:'11,200 kg'},
-  {id:'SIGN-P00857',shipper:'Ningbo Primax',hbl:'WHS2508329',mbl:'EVGG2508034',container:'CXDU1810033',ctype:'40HC',pol:'Xiamen, China',pod:'Shuaiba, Kuwait',etd:'02/01/2025',eta:'03/02/2025',status:'transit',progress:45,line:'EVERGREEN',vessel:'EVER GOLDEN',cargo:'Plastics',volume:'1×40HC',qty:'350 units',weight:'19,000 kg'},
-  {id:'SIGN-P00858',shipper:'Yuyao Hualun Import',hbl:'WHS2508327',mbl:'MSCU2508112',container:'MSMU4277664',ctype:'40GP',pol:'Shanghai, China',pod:'Shuaiba, Kuwait',etd:'13/11/2024',eta:'14/12/2024',status:'transit',progress:30,line:'MSC',vessel:'MSC VALENTINA',cargo:'Consumer Goods',volume:'1×40',qty:'420 units',weight:'17,500 kg'},
-  {id:'SIGN-P00859',shipper:'Zhejiang Holding Co',hbl:'WHS2508221',mbl:'HLCU2508789',container:'MSNU7913948',ctype:'40GP',pol:'Shanghai, China',pod:'Shuaiba, Kuwait',etd:'11/10/2024',eta:'12/11/2024',status:'transit',progress:70,line:'HAPAG-LLOYD',vessel:'HONG KONG EXPRESS',cargo:'Textiles',volume:'1×40',qty:'800 units',weight:'22,000 kg'},
-  {id:'SIGN-P00860',shipper:'Kingster Kitchen',hbl:'WHS2508222',mbl:'COSU2508902',container:'TXGU5430810',ctype:'40HC',pol:'Ningbo, China',pod:'Shuaiba, Kuwait',etd:'09/09/2024',eta:'10/10/2024',status:'arrived',progress:100,line:'COSCO',vessel:'COSCO PRIDE',cargo:'Kitchen Appliances',volume:'1×40HC',qty:'200 units',weight:'16,800 kg'},
-  {id:'SIGN-P00861',shipper:'Xiamen Yamat',hbl:'WHS2508191',mbl:'MAEU2508433',container:'MSDU1918773',ctype:'20GP',pol:'Xiamen, China',pod:'Shuaiba, Kuwait',etd:'08/08/2024',eta:'08/09/2024',status:'transit',progress:55,line:'MAERSK',vessel:'MAERSK ENFIELD',cargo:'Auto Parts',volume:'1×20',qty:'100 units',weight:'8,500 kg'},
-  {id:'SIGN-P00862',shipper:'Yiliang Plastics',hbl:'WHS2508161',mbl:'OOLU2508567',container:'TCLU93330636',ctype:'40GP',pol:'Shanghai, China',pod:'Shuaiba, Kuwait',etd:'07/07/2024',eta:'07/08/2024',status:'transit',progress:80,line:'OOCL',vessel:'OOCL GERMANY',cargo:'Plastic Goods',volume:'1×40',qty:'550 units',weight:'13,200 kg'},
-  {id:'SIGN-P00863',shipper:'Perfect Wares',hbl:'WHS2508277',mbl:'MSCU2508344',container:'TCLU4448732',ctype:'40HC',pol:'Ningbo, China',pod:'Shuaiba, Kuwait',etd:'06/06/2024',eta:'07/07/2024',status:'arrived',progress:100,line:'MSC',vessel:'MSC AURORA',cargo:'Household Items',volume:'1×40HC',qty:'700 units',weight:'25,000 kg'},
-  {id:'SIGN-P00864',shipper:'Equilibrium Life System',hbl:'WHS2508307',mbl:'EVGG2508890',container:'CAIU9076656',ctype:'40GP',pol:'Ningbo, China',pod:'Shuaiba, Kuwait',etd:'05/05/2024',eta:'06/06/2024',status:'arrived',progress:100,line:'EVERGREEN',vessel:'EVER GIVEN',cargo:'Health Products',volume:'1×40',qty:'320 units',weight:'9,800 kg'},
+  {id:'SIGN-P00851',shipper:'Fujian Yiboyou',hbl:'WOLSZSE25082945',mbl:'MAEU258177596',container:'CLHU9076863',ctype:'40HC',pol:'Xiamen, China',pod:'Shuaiba, Kuwait',etd:'28/07/2025',eta:'20/08/2025',status:'transit',progress:60,line:'MAERSK',vessel:'MAERSK YORKTOWN 534N',cargo:'Plastic Foods',volume:'1×40',qty:'400 units / 60 pallets',weight:'24,000 kg',ministry:'Ministry of Defence'},
+  {id:'SIGN-P00852',shipper:'Yuyao Hualun Import',hbl:'HSW2508965',mbl:'HLCUXIA2508123',container:'FANU5583691',ctype:'40GP',pol:'Shanghai, China',pod:'Shuaiba, Kuwait',etd:'14/07/2025',eta:'15/08/2025',status:'arrived',progress:100,line:'HAPAG-LLOYD',vessel:'SOPHIA 021E',cargo:'Kitchenware',volume:'1×40',qty:'300 units',weight:'18,000 kg',ministry:'Ministry of Interior'},
+  {id:'SIGN-P00853',shipper:'Zhejiang Holding Co',hbl:'WOLSZSE25082256',mbl:'COSU2508331',container:'MSDU1918773',ctype:'20GP',pol:'Xiamen, China',pod:'Shuaiba, Kuwait',etd:'02/06/2025',eta:'03/07/2025',status:'arrived',progress:100,line:'COSCO',vessel:'COSCO HARMONY',cargo:'Hardware',volume:'1×20',qty:'500 units',weight:'12,000 kg',ministry:'Ministry of Health'},
+  {id:'SIGN-P00854',shipper:'Kingster Kitchen',hbl:'WHSES12545',mbl:'HLCU2508456',container:'CLHU9076863',ctype:'40HC',pol:'Ningbo, China',pod:'Shuaiba, Kuwait',etd:'01/05/2025',eta:'03/06/2025',status:'customs',progress:85,line:'HAPAG-LLOYD',vessel:'MÜNSTERLAND',cargo:'Kitchen Equipment',volume:'1×40HC',qty:'250 units',weight:'15,600 kg',ministry:'Ministry of Foreign Affairs'},
+  {id:'SIGN-P00855',shipper:'Xiamen Yamat',hbl:'HSW2508965',mbl:'MAEU2508221',container:'CAIU9076863',ctype:'40GP',pol:'Xiamen, China',pod:'Shuaiba, Kuwait',etd:'21/03/2025',eta:'23/04/2025',status:'arrived',progress:100,line:'MAERSK',vessel:'MAERSK CALLAO',cargo:'Electronics',volume:'1×40',qty:'600 units',weight:'21,000 kg',ministry:'Ministry of Defence'},
+  {id:'SIGN-P00856',shipper:'Perfect Wares',hbl:'WHSWE02145',mbl:'OOLU2508001',container:'MSDU9087852',ctype:'20GP',pol:'Shanghai, China',pod:'Shuaiba, Kuwait',etd:'14/02/2025',eta:'15/03/2025',status:'arrived',progress:100,line:'OOCL',vessel:'OOCL BEIJING',cargo:'General Merchandise',volume:'1×20',qty:'480 units',weight:'11,200 kg',ministry:'Ministry of Interior'},
+  {id:'SIGN-P00857',shipper:'Ningbo Primax',hbl:'WHS2508329',mbl:'EVGG2508034',container:'CXDU1810033',ctype:'40HC',pol:'Xiamen, China',pod:'Shuaiba, Kuwait',etd:'02/01/2025',eta:'03/02/2025',status:'transit',progress:45,line:'EVERGREEN',vessel:'EVER GOLDEN',cargo:'Plastics',volume:'1×40HC',qty:'350 units',weight:'19,000 kg',ministry:'Ministry of Health'},
+  {id:'SIGN-P00858',shipper:'Yuyao Hualun Import',hbl:'WHS2508327',mbl:'MSCU2508112',container:'MSMU4277664',ctype:'40GP',pol:'Shanghai, China',pod:'Shuaiba, Kuwait',etd:'13/11/2024',eta:'14/12/2024',status:'transit',progress:30,line:'MSC',vessel:'MSC VALENTINA',cargo:'Consumer Goods',volume:'1×40',qty:'420 units',weight:'17,500 kg',ministry:'Ministry of Foreign Affairs'},
+  {id:'SIGN-P00859',shipper:'Zhejiang Holding Co',hbl:'WHS2508221',mbl:'HLCU2508789',container:'MSNU7913948',ctype:'40GP',pol:'Shanghai, China',pod:'Shuaiba, Kuwait',etd:'11/10/2024',eta:'12/11/2024',status:'transit',progress:70,line:'HAPAG-LLOYD',vessel:'HONG KONG EXPRESS',cargo:'Textiles',volume:'1×40',qty:'800 units',weight:'22,000 kg',ministry:'Ministry of Defence'},
+  {id:'SIGN-P00860',shipper:'Kingster Kitchen',hbl:'WHS2508222',mbl:'COSU2508902',container:'TXGU5430810',ctype:'40HC',pol:'Ningbo, China',pod:'Shuaiba, Kuwait',etd:'09/09/2024',eta:'10/10/2024',status:'arrived',progress:100,line:'COSCO',vessel:'COSCO PRIDE',cargo:'Kitchen Appliances',volume:'1×40HC',qty:'200 units',weight:'16,800 kg',ministry:'Ministry of Interior'},
+  {id:'SIGN-P00861',shipper:'Xiamen Yamat',hbl:'WHS2508191',mbl:'MAEU2508433',container:'MSDU1918773',ctype:'20GP',pol:'Xiamen, China',pod:'Shuaiba, Kuwait',etd:'08/08/2024',eta:'08/09/2024',status:'transit',progress:55,line:'MAERSK',vessel:'MAERSK ENFIELD',cargo:'Auto Parts',volume:'1×20',qty:'100 units',weight:'8,500 kg',ministry:'Ministry of Health'},
+  {id:'SIGN-P00862',shipper:'Yiliang Plastics',hbl:'WHS2508161',mbl:'OOLU2508567',container:'TCLU93330636',ctype:'40GP',pol:'Shanghai, China',pod:'Shuaiba, Kuwait',etd:'07/07/2024',eta:'07/08/2024',status:'transit',progress:80,line:'OOCL',vessel:'OOCL GERMANY',cargo:'Plastic Goods',volume:'1×40',qty:'550 units',weight:'13,200 kg',ministry:'Ministry of Foreign Affairs'},
+  {id:'SIGN-P00863',shipper:'Perfect Wares',hbl:'WHS2508277',mbl:'MSCU2508344',container:'TCLU4448732',ctype:'40HC',pol:'Ningbo, China',pod:'Shuaiba, Kuwait',etd:'06/06/2024',eta:'07/07/2024',status:'arrived',progress:100,line:'MSC',vessel:'MSC AURORA',cargo:'Household Items',volume:'1×40HC',qty:'700 units',weight:'25,000 kg',ministry:'Ministry of Defence'},
+  {id:'SIGN-P00864',shipper:'Equilibrium Life System',hbl:'WHS2508307',mbl:'EVGG2508890',container:'CAIU9076656',ctype:'40GP',pol:'Ningbo, China',pod:'Shuaiba, Kuwait',etd:'05/05/2024',eta:'06/06/2024',status:'arrived',progress:100,line:'EVERGREEN',vessel:'EVER GIVEN',cargo:'Health Products',volume:'1×40',qty:'320 units',weight:'9,800 kg',ministry:'Ministry of Interior'},
 ];
 
 // ─── BADGE HTML ───
@@ -1157,19 +1401,22 @@ function progressMini(pct) {
 
 // ─── BUILD ADMIN TABLE ───
 let currentFilter = '';
+let currentMinistryFilter = '';
 function buildAdminTable(filter) {
   const search = (document.getElementById('tableSearch')?.value || '').toLowerCase();
   const statusF = document.getElementById('statusFilter')?.value || '';
   const list = shipments.filter(s => {
     if (filter && s.status !== filter) return false;
     if (statusF && s.status !== statusF) return false;
+    if (currentMinistryFilter && s.ministry !== currentMinistryFilter) return false;
     if (search) return [s.id, s.shipper, s.hbl, s.container, s.pol].some(v => v.toLowerCase().includes(search));
     return true;
   });
   document.getElementById('adminTableBody').innerHTML = list.map(s => `
     <tr onclick="openDetail('${s.id}')">
-      <td><span class="shipment-id">${s.id}</span></td>
+      <td><span class="shipment-id">${displayId(s)}</span></td>
       <td>${s.shipper}</td>
+      <td><span class="cell-secondary">${s.ministry || '—'}</span></td>
       <td><span class="cell-secondary">${s.hbl}</span></td>
       <td><span class="cell-secondary">${s.container} · ${s.ctype}</span></td>
       <td>${s.pol}</td>
@@ -1184,14 +1431,24 @@ function buildAdminTable(filter) {
           <button class="action-btn danger" title="Delete" onclick="event.stopPropagation()"><i class="ti ti-trash"></i></button>
         </div>
       </td>
-    </tr>`).join('') || `<tr><td colspan="10"><div class="empty-state"><i class="ti ti-package-off"></i><p>No shipments found</p></div></td></tr>`;
+    </tr>`).join('') || `<tr><td colspan="11"><div class="empty-state"><i class="ti ti-package-off"></i><p>No shipments found</p></div></td></tr>`;
+
+  // Reflect active ministry filter in the page subtitle
+  const subEl = document.getElementById('adminListSub');
+  if (subEl) {
+    subEl.textContent = currentMinistryFilter
+      ? `Al Qabandi & Partners Co. W.L.L. — Kuwait · Filtered by ${currentMinistryFilter}`
+      : 'Al Qabandi & Partners Co. W.L.L. — Kuwait';
+  }
 }
 
 function filterTable(val) { buildAdminTable(currentFilter); }
 
 function filterPage(status, el) {
   currentFilter = status;
+  currentMinistryFilter = '';
   document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  document.querySelectorAll('.sidebar-subitem').forEach(i => i.classList.remove('active'));
   if (el) el.classList.add('active');
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('adminListPage').classList.add('active');
@@ -1199,12 +1456,41 @@ function filterPage(status, el) {
   buildAdminTable(status);
 }
 
+// ─── ALL SHIPMENTS / MINISTRY SUBMENU ───
+function selectAllShipments(el) {
+  currentMinistryFilter = '';
+  document.querySelectorAll('.sidebar-subitem').forEach(i => i.classList.remove('active'));
+  setAdminPage('list', el);
+
+  const submenu = document.getElementById('shipmentsSubmenu');
+  const chevron = document.getElementById('shipmentsChevron');
+  submenu.classList.add('open');
+  chevron.classList.add('rotated');
+}
+
+function filterByMinistry(ministry, el) {
+  currentFilter = '';
+  currentMinistryFilter = ministry;
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  document.querySelectorAll('.sidebar-subitem').forEach(i => i.classList.remove('active'));
+  document.querySelector('.sidebar-item[onclick^="selectAllShipments"]').classList.add('active');
+  el.classList.add('active');
+
+  document.getElementById('shipmentsSubmenu').classList.add('open');
+  document.getElementById('shipmentsChevron').classList.add('rotated');
+
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('adminListPage').classList.add('active');
+  closeDetail();
+  buildAdminTable('');
+}
+
 // ─── OPEN DETAIL ───
 function openDetail(id) {
   const s = shipments.find(x => x.id === id);
   if (!s) return;
   document.getElementById('adminDetail').classList.add('open');
-  document.getElementById('detailId').textContent = s.id;
+  document.getElementById('detailId').textContent = displayId(s);
   document.getElementById('detailShipper').textContent = s.shipper;
   document.getElementById('detailBadge').innerHTML = badgeHTML(s.status);
   document.getElementById('detailProgress').style.width = s.progress + '%';
@@ -1244,6 +1530,94 @@ function closeDetail() { document.getElementById('adminDetail').classList.remove
 
 // ─── BUILD USER LIST ───
 let userStatusFilter = 'all';
+// ─── TRACKING MILESTONE MODAL (Client Portal) ───
+function getMilestones(s) {
+  const originCity = s.pol.split(',')[0];
+  return [
+    {
+      title: 'Booking Confirmed',
+      location: s.pol,
+      date: s.etd,
+      vessel: `${s.vessel} · ${s.line}`,
+      details: `Booking confirmed with ${s.line}. Container ${s.container} (${s.ctype}) reserved for "${s.cargo}".`,
+      done: true,
+    },
+    {
+      title: 'Cargo Loaded',
+      location: `${originCity} Port`,
+      date: s.etd,
+      vessel: `${s.vessel} · ${s.line}`,
+      details: `Cargo loaded into container at ${s.pol}. Weight ${s.weight}, volume ${s.volume}.`,
+      done: s.progress >= 20,
+    },
+    {
+      title: 'Vessel Departed',
+      location: s.pol,
+      date: s.etd,
+      vessel: `${s.vessel} · ${s.line}`,
+      details: `Vessel ${s.vessel} departed ${s.pol}, en route to ${s.pod}.`,
+      done: s.progress >= 40,
+      active: s.status === 'transit' && s.progress < 80,
+    },
+    {
+      title: 'Arriving at Shuaiba',
+      location: s.pod,
+      date: s.eta,
+      vessel: `${s.vessel} · ${s.line}`,
+      details: `Vessel is approaching ${s.pod}. Estimated arrival ${s.eta}.`,
+      done: s.status === 'arrived' || s.status === 'customs',
+      active: s.status === 'transit' && s.progress >= 70,
+    },
+    {
+      title: 'Customs Clearance',
+      location: s.pod,
+      date: s.eta,
+      vessel: `${s.vessel} · ${s.line}`,
+      details: s.status === 'customs'
+        ? `Shipment is undergoing customs clearance at ${s.pod}.`
+        : (s.status === 'arrived' ? `Customs clearance completed at ${s.pod}.` : `Customs clearance pending.`),
+      done: s.status === 'arrived',
+      active: s.status === 'customs',
+    },
+    {
+      title: 'Delivered',
+      location: s.pod,
+      date: s.eta,
+      vessel: `${s.vessel} · ${s.line}`,
+      details: s.status === 'arrived' ? `Shipment delivered and cleared at ${s.pod}.` : `Delivery pending.`,
+      done: s.status === 'arrived',
+    },
+  ];
+}
+
+function openMilestone(id) {
+  const s = shipments.find(x => x.id === id);
+  if (!s) return;
+  const steps = getMilestones(s);
+  // Pick the most advanced milestone: last "done" step, or the "active" step, falling back to the first step.
+  let current = steps[0];
+  for (const step of steps) {
+    if (step.done) current = step;
+  }
+  const activeStep = steps.find(step => step.active);
+  if (activeStep) current = activeStep;
+
+  document.getElementById('msTitle').textContent = current.title;
+  const badge = document.getElementById('msStatusBadge');
+  badge.textContent = current.done ? 'Completed' : (current.active ? 'In Progress' : 'Pending');
+  badge.className = 'milestone-status-badge ' + (current.done ? 'completed' : (current.active ? 'active' : ''));
+  document.getElementById('msLocation').textContent = current.location;
+  document.getElementById('msDate').textContent = current.date;
+  document.getElementById('msVessel').textContent = current.vessel;
+  document.getElementById('msShipment').textContent = `${s.id} · ${s.container}`;
+  document.getElementById('msDetails').textContent = current.details;
+
+  document.getElementById('milestoneOverlay').classList.add('open');
+}
+function closeMilestone() {
+  document.getElementById('milestoneOverlay').classList.remove('open');
+}
+
 function buildUserList(search='') {
   const sl = search.toLowerCase();
   const list = shipments.filter(s => {
@@ -1253,7 +1627,7 @@ function buildUserList(search='') {
   });
   document.getElementById('shipCount').textContent = `${list.length} shipment${list.length !== 1 ? 's' : ''}`;
   document.getElementById('userShipmentList').innerHTML = list.map(s => `
-    <div class="shipment-card">
+    <div class="shipment-card" onclick="openMilestone('${s.id}')">
       <div class="sc-top">
         <div>
           <div class="sc-id">${s.id}</div>
@@ -1302,10 +1676,31 @@ function switchMode(mode) {
 }
 
 // ─── PAGES ───
+// ─── TRANSPORT MODE FIELD SWAP ───
+function handleTransportMode(mode) {
+  const isAir = mode === 'Air Freight';
+  document.getElementById('hblLabel').textContent = isAir ? 'HAWB Number' : 'HBL Number';
+  document.getElementById('hblInput').placeholder = isAir ? 'House Air Waybill No.' : 'House Bill of Lading No.';
+  document.getElementById('mblLabel').textContent = isAir ? 'MAWB Number' : 'MBL Number';
+  document.getElementById('mblInput').placeholder = isAir ? 'Master Air Waybill No.' : 'Master Bill of Lading No.';
+  document.getElementById('polLabel').textContent = isAir ? 'Air of Loading (AOL)' : 'Port of Loading (POL)';
+  document.getElementById('polInput').placeholder = isAir ? 'e.g. Dubai, UAE' : 'e.g. Xiamen, China';
+  document.getElementById('podLabel').textContent = isAir ? 'Air of Discharge (AOD)' : 'Port of Discharge (POD)';
+  document.getElementById('shippingLineLabel').textContent = isAir ? 'Air Line' : 'Shipping Line';
+  document.getElementById('shippingLineInput').placeholder = isAir ? 'e.g. EMIRATES SKYCARGO' : 'e.g. MAERSK';
+  document.getElementById('vesselLabel').textContent = isAir ? 'Flight Number' : 'Vessel Name';
+  document.getElementById('vesselInput').placeholder = isAir ? 'e.g. EK9053' : 'e.g. MAERSK YORKTOWN';
+  document.getElementById('airCustomsSection').style.display = isAir ? 'block' : 'none';
+}
+
 function setAdminPage(page, el) {
   document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
   if (el) el.classList.add('active');
   currentFilter = '';
+  if (!el || el.getAttribute('onclick') !== 'selectAllShipments(this)') {
+    currentMinistryFilter = '';
+    document.querySelectorAll('.sidebar-subitem').forEach(i => i.classList.remove('active'));
+  }
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(page === 'add' ? 'adminAddPage' : 'adminListPage').classList.add('active');
   closeDetail();
@@ -1327,11 +1722,37 @@ function logout() {
   document.getElementById('mainApp').style.display = 'none';
 }
 
+// ─── MINISTRY SELECTION MODAL (before saving a shipment) ───
+let selectedMinistry = null;
+function openMinistryModal() {
+  selectedMinistry = null;
+  document.querySelectorAll('.ministry-option').forEach(o => o.classList.remove('selected'));
+  document.getElementById('ministryWarning').classList.remove('show');
+  document.getElementById('ministryOverlay').classList.add('open');
+}
+function closeMinistryModal() {
+  document.getElementById('ministryOverlay').classList.remove('open');
+}
+function selectMinistryOption(el, ministry) {
+  selectedMinistry = ministry;
+  document.querySelectorAll('.ministry-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('ministryWarning').classList.remove('show');
+}
+function confirmMinistrySave() {
+  if (!selectedMinistry) {
+    document.getElementById('ministryWarning').classList.add('show');
+    return;
+  }
+  closeMinistryModal();
+  showSaved(selectedMinistry);
+}
+
 // ─── SAVE ANIMATION ───
-function showSaved() {
-  const btn = event.currentTarget;
+function showSaved(ministry) {
+  const btn = document.querySelector('.form-actions .btn-primary');
   const orig = btn.innerHTML;
-  btn.innerHTML = '<i class="ti ti-check"></i> Saved!';
+  btn.innerHTML = `<i class="ti ti-check"></i> Saved to ${ministry}!`;
   btn.style.background = 'var(--success)';
   btn.style.borderColor = 'var(--success)';
   setTimeout(() => {
