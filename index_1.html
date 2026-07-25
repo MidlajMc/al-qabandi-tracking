@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Al Qabandi & Partners — Shipment Tracking System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #0d2137;
+  --navy-mid: #1a3a5c;
+  --navy-light: #2a5280;
+  --gold: #c8952a;
+  --gold-light: #e8b84b;
+  --gold-pale: #fdf3de;
+  --white: #ffffff;
+  --bg: #f2f4f7;
+  --bg2: #e8ecf2;
+  --surface: #ffffff;
+  --border: #dde3ed;
+  --border-light: #eef1f6;
+  --text: #0d1f33;
+  --text-2: #4a5f78;
+  --text-3: #8898ae;
+  --success: #0f7b51;
+  --success-bg: #e6f6ef;
+  --warn: #b45309;
+  --warn-bg: #fef3c7;
+  --danger: #b91c1c;
+  --danger-bg: #fee2e2;
+  --info: #1d4ed8;
+  --info-bg: #dbeafe;
+  --purple: #6b21a8;
+  --purple-bg: #f3e8ff;
+  --nav-h: 58px;
+  --sidebar-w: 230px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.06);
+}
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── TOP NAV ── */
+.topnav {
+  height: var(--nav-h);
+  background: var(--navy);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px; gap: 16px; flex-shrink: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  position: relative; z-index: 30;
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-logo {
+  width: 38px; height: 38px; border-radius: 8px;
+  background: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600; color: #fff; font-size: 13px; letter-spacing: 0.5px;
+  flex-shrink: 0; box-shadow: 0 2px 8px rgba(200,149,42,0.4);
+}
+.brand-name { color: #fff; font-size: 13px; font-weight: 600; line-height: 1.3; letter-spacing: 0.2px; }
+.brand-sub { color: rgba(255,255,255,0.45); font-size: 10px; letter-spacing: 0.5px; margin-top: 1px; }
+.topnav-center { display: flex; gap: 2px; }
+.topnav-tab {
+  padding: 6px 18px; border-radius: 7px; cursor: pointer; font-size: 13px;
+  color: rgba(255,255,255,0.55); border: none; background: transparent;
+  display: flex; align-items: center; gap: 6px; transition: all 0.15s; font-family: inherit; font-weight: 500;
+}
+.topnav-tab:hover { background: rgba(255,255,255,0.08); color: #fff; }
+.topnav-tab.active { background: rgba(255,255,255,0.14); color: #fff; }
+.topnav-tab .ti { font-size: 15px; }
+.topnav-right { display: flex; align-items: center; gap: 12px; }
+.clock { color: rgba(255,255,255,0.45); font-size: 11px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.5px; }
+.avatar {
+  width: 32px; height: 32px; border-radius: 50%; background: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 11px; font-weight: 600; cursor: pointer;
+  border: 2px solid rgba(255,255,255,0.2);
+}
+.icon-btn {
+  width: 30px; height: 30px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15);
+  background: transparent; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: rgba(255,255,255,0.55); transition: all 0.12s;
+}
+.icon-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+/* ── MAIN LAYOUT ── */
+.app-body { display: flex; flex: 1; overflow: hidden; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w); background: var(--surface); flex-shrink: 0;
+  border-right: 1px solid var(--border); display: flex; flex-direction: column;
+  overflow-y: auto; padding: 12px 0 20px;
+}
+.sidebar-label {
+  font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase;
+  letter-spacing: 1px; padding: 12px 18px 5px;
+}
+.sidebar-item {
+  display: flex; align-items: center; gap: 9px; padding: 8px 18px; cursor: pointer;
+  font-size: 13px; color: var(--text-2); transition: all 0.12s; position: relative;
+  border-left: 2px solid transparent; user-select: none; font-weight: 400;
+}
+.sidebar-item .ti { font-size: 16px; flex-shrink: 0; }
+.sidebar-item:hover { background: var(--bg); color: var(--text); }
+.sidebar-item.active { background: #eef3fa; color: var(--navy-mid); border-left-color: var(--navy-mid); font-weight: 500; }
+.sidebar-badge {
+  margin-left: auto; background: var(--gold); color: #fff;
+  border-radius: 12px; padding: 1px 8px; font-size: 10px; font-weight: 600; min-width: 22px; text-align: center;
+}
+.sidebar-badge.blue { background: var(--navy-mid); }
+.sidebar-divider { height: 1px; background: var(--border-light); margin: 8px 0; }
+.sidebar-item .submenu-chevron { margin-left: auto; font-size: 14px; transition: transform 0.18s; color: var(--text-3); }
+.sidebar-item .submenu-chevron.rotated { transform: rotate(180deg); }
+.sidebar-submenu {
+  max-height: 0; overflow: hidden; transition: max-height 0.2s ease;
+}
+.sidebar-submenu.open { max-height: 220px; }
+.sidebar-subitem {
+  display: flex; align-items: center; gap: 8px; padding: 7px 18px 7px 44px; cursor: pointer;
+  font-size: 12px; color: var(--text-2); transition: all 0.12s; user-select: none;
+  border-left: 2px solid transparent;
+}
+.sidebar-subitem:hover { background: var(--bg); color: var(--text); }
+.sidebar-subitem.active { background: var(--gold-pale); color: var(--gold); font-weight: 500; border-left-color: var(--gold); }
+
+/* ── CONTENT ── */
+.content-wrap { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+.content { flex: 1; padding: 22px; overflow-y: auto; }
+
+/* ── PAGE SECTIONS ── */
+.page { display: none; }
+.page.active { display: block; animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── PAGE HEADER ── */
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 22px; }
+.page-title { font-size: 19px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; }
+.page-sub { font-size: 12px; color: var(--text-3); margin-top: 3px; }
+
+/* ── BUTTONS ── */
+.btn {
+  padding: 7px 14px; border-radius: var(--radius); border: 1px solid var(--border);
+  background: var(--surface); cursor: pointer; font-size: 12px; color: var(--text-2);
+  display: inline-flex; align-items: center; gap: 6px; transition: all 0.12s;
+  font-family: inherit; font-weight: 500; white-space: nowrap;
+}
+.btn:hover { background: var(--bg); border-color: #c0cbdb; color: var(--text); }
+.btn-primary { background: var(--navy-mid); color: #fff; border-color: var(--navy-mid); }
+.btn-primary:hover { background: var(--navy); border-color: var(--navy); }
+.btn-gold { background: var(--gold); color: #fff; border-color: var(--gold); }
+.btn-gold:hover { background: #b07c20; }
+.btn-sm { padding: 5px 10px; font-size: 11px; }
+
+.action-btn {
+  width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border);
+  background: transparent; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-3); transition: all 0.12s; font-size: 14px;
+}
+.action-btn:hover { background: var(--bg); color: var(--text); border-color: #c0cbdb; }
+.action-btn.danger:hover { background: var(--danger-bg); color: var(--danger); border-color: #fca5a5; }
+
+/* ── STATS ── */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.stat-card {
+  background: var(--surface); border-radius: var(--radius-lg); padding: 16px 18px;
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+}
+.stat-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 10px; }
+.stat-icon.blue { background: #dbeafe; color: var(--info); }
+.stat-icon.navy { background: #e0e9f4; color: var(--navy-mid); }
+.stat-icon.green { background: var(--success-bg); color: var(--success); }
+.stat-icon.warn { background: var(--warn-bg); color: var(--warn); }
+.stat-label { font-size: 11px; color: var(--text-3); font-weight: 500; letter-spacing: 0.3px; margin-bottom: 4px; }
+.stat-value { font-size: 26px; font-weight: 600; letter-spacing: -0.5px; color: var(--text); }
+.stat-delta { font-size: 11px; margin-top: 4px; display: flex; align-items: center; gap: 3px; }
+.stat-delta.up { color: var(--success); }
+.stat-delta.neutral { color: var(--text-3); }
+.stat-delta.down { color: var(--danger); }
+
+/* ── CARD ── */
+.card {
+  background: var(--surface); border-radius: var(--radius-lg);
+  border: 1px solid var(--border); box-shadow: var(--shadow); overflow: hidden;
+}
+.card-header {
+  padding: 14px 18px; border-bottom: 1px solid var(--border-light);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.card-title { font-size: 14px; font-weight: 600; color: var(--text); }
+.card-sub { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+.toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+.search-box {
+  display: flex; align-items: center; gap: 6px; padding: 6px 11px;
+  background: var(--bg); border-radius: var(--radius); border: 1px solid var(--border);
+  font-size: 12px; color: var(--text-3); width: 220px;
+}
+.search-box input { background: none; border: none; outline: none; font-size: 12px; color: var(--text); width: 100%; font-family: inherit; }
+.search-box input::placeholder { color: var(--text-3); }
+.search-box .ti { font-size: 14px; flex-shrink: 0; }
+
+/* ── TABLE ── */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+thead { position: sticky; top: 0; z-index: 2; }
+th {
+  padding: 10px 16px; text-align: left; font-weight: 600; color: var(--text-3);
+  border-bottom: 1px solid var(--border); font-size: 10.5px; text-transform: uppercase;
+  letter-spacing: 0.6px; background: var(--bg); white-space: nowrap;
+}
+td { padding: 11px 16px; border-bottom: 1px solid var(--border-light); color: var(--text); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tbody tr { transition: background 0.1s; }
+tbody tr:hover td { background: #f6f8fc; cursor: pointer; }
+.shipment-id { font-weight: 600; color: var(--navy-mid); font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; }
+.cell-secondary { font-size: 11px; color: var(--text-3); font-family: 'IBM Plex Mono', monospace; }
+
+/* ── BADGES ── */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 9px; border-radius: 12px; font-size: 11px; font-weight: 500; white-space: nowrap;
+}
+.badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.badge-transit { background: var(--info-bg); color: var(--info); }
+.badge-arrived { background: var(--success-bg); color: var(--success); }
+.badge-pending { background: var(--warn-bg); color: var(--warn); }
+.badge-customs { background: var(--purple-bg); color: var(--purple); }
+
+/* ── DETAIL PANEL ── */
+.detail-overlay {
+  position: absolute; top: 0; right: 0; bottom: 0; width: 400px;
+  background: var(--surface); border-left: 1px solid var(--border);
+  display: none; flex-direction: column; z-index: 20; box-shadow: var(--shadow-md);
+}
+.detail-overlay.open { display: flex; animation: slideIn 0.22s ease; }
+@keyframes slideIn { from { transform: translateX(30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.detail-header { padding: 16px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; }
+.detail-id { font-size: 15px; font-weight: 600; color: var(--navy-mid); font-family: 'IBM Plex Mono', monospace; }
+.detail-shipper { font-size: 12px; color: var(--text-3); margin-top: 3px; }
+.detail-body { padding: 16px 18px; overflow-y: auto; flex: 1; }
+.detail-section { margin-bottom: 22px; }
+.detail-section-label { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; }
+.detail-row { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 0; border-bottom: 1px solid var(--border-light); font-size: 12px; }
+.detail-row:last-child { border-bottom: none; }
+.detail-row label { color: var(--text-3); }
+.detail-row span { font-weight: 500; text-align: right; font-size: 12px; }
+
+/* ── TIMELINE ── */
+.timeline { display: flex; flex-direction: column; }
+.timeline-item { display: flex; gap: 12px; }
+.tl-line { display: flex; flex-direction: column; align-items: center; }
+.tl-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+.tl-dot.done { background: var(--success); }
+.tl-dot.active { background: var(--gold); box-shadow: 0 0 0 3px rgba(200,149,42,0.25); }
+.tl-dot.pending { background: var(--border); border: 2px solid var(--text-3); }
+.tl-connector { width: 1px; flex: 1; min-height: 22px; background: var(--border); margin: 3px 0; }
+.tl-content { padding-bottom: 16px; flex: 1; }
+.tl-title { font-size: 12.5px; font-weight: 500; }
+.tl-meta { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+/* ── DOCS ── */
+.doc-list { display: flex; flex-direction: column; gap: 6px; }
+.doc-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; background: var(--bg); border-radius: var(--radius); font-size: 12px; border: 1px solid var(--border-light); }
+.doc-item-left { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+.doc-item .ti { font-size: 16px; }
+
+/* ── FORM ── */
+.form-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 14px; box-shadow: var(--shadow); }
+.form-section-title { font-size: 13px; font-weight: 600; color: var(--navy-mid); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-label { font-size: 11px; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.5px; }
+.form-input {
+  padding: 8px 11px; border-radius: var(--radius); border: 1px solid var(--border);
+  background: var(--bg); color: var(--text); font-size: 13px; outline: none;
+  font-family: inherit; transition: border-color 0.15s, box-shadow 0.15s;
+}
+.form-input:focus { border-color: var(--navy-mid); background: var(--surface); box-shadow: 0 0 0 3px rgba(26,58,92,0.1); }
+select.form-input { cursor: pointer; }
+.form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 4px; }
+
+/* ── UPLOAD ZONE ── */
+.upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.upload-zone {
+  border: 1.5px dashed var(--border); border-radius: var(--radius); padding: 18px;
+  text-align: center; color: var(--text-3); font-size: 12px; cursor: pointer;
+  transition: all 0.15s;
+}
+.upload-zone:hover { background: #f5f7fb; border-color: var(--navy-light); color: var(--navy-mid); }
+.upload-zone .ti { font-size: 22px; display: block; margin-bottom: 6px; }
+
+/* ── USER PORTAL ── */
+.portal-hero {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+  border-radius: var(--radius-lg); padding: 24px; margin-bottom: 18px; color: #fff;
+  box-shadow: 0 4px 20px rgba(13,33,55,0.3); position: relative; overflow: hidden;
+}
+.portal-hero::before {
+  content: ''; position: absolute; right: -20px; top: -30px;
+  width: 150px; height: 150px; border-radius: 50%;
+  background: rgba(255,255,255,0.04); pointer-events: none;
+}
+.portal-hero::after {
+  content: ''; position: absolute; right: 30px; bottom: -40px;
+  width: 100px; height: 100px; border-radius: 50%;
+  background: rgba(200,149,42,0.15); pointer-events: none;
+}
+.portal-title { font-size: 17px; font-weight: 600; letter-spacing: -0.2px; }
+.portal-sub { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 3px; }
+.portal-search { display: flex; gap: 8px; margin-top: 16px; }
+.portal-search input {
+  flex: 1; padding: 10px 14px; border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1); color: #fff; font-size: 13px; outline: none;
+  font-family: inherit; backdrop-filter: blur(4px);
+}
+.portal-search input::placeholder { color: rgba(255,255,255,0.45); }
+.portal-search input:focus { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.15); }
+
+/* ── SHIPMENT CARDS ── */
+.shipment-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 10px;
+  cursor: pointer; transition: all 0.15s; box-shadow: var(--shadow);
+}
+.shipment-card:hover { border-color: var(--navy-light); box-shadow: 0 4px 16px rgba(26,58,92,0.12); transform: translateY(-1px); }
+.sc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.sc-id { font-weight: 600; font-size: 13px; color: var(--navy-mid); font-family: 'IBM Plex Mono', monospace; }
+.sc-shipper { font-size: 12px; color: var(--text-3); margin-top: 3px; }
+.sc-hbl { font-size: 10.5px; color: var(--text-3); font-family: 'IBM Plex Mono', monospace; margin-top: 3px; }
+.route-bar { display: flex; align-items: center; gap: 10px; font-size: 12px; }
+.port { font-weight: 500; font-size: 11.5px; white-space: nowrap; }
+.route-line { flex: 1; height: 1.5px; background: var(--border); position: relative; overflow: visible; }
+.route-ship {
+  position: absolute; font-size: 12px; color: var(--gold); transform: translateY(-50%);
+  top: 50%; transition: left 0.5s ease;
+}
+.progress-track { height: 4px; background: var(--bg2); border-radius: 2px; overflow: hidden; margin-top: 10px; }
+.progress-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--navy-mid), var(--gold)); transition: width 0.6s ease; }
+.route-dates { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-3); margin-top: 6px; }
+.pct { font-weight: 600; color: var(--navy-mid); font-size: 10.5px; }
+
+/* ── LOGIN ── */
+.login-screen {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh; background: linear-gradient(135deg, #0a1929 0%, #1a3a5c 100%);
+  position: fixed; inset: 0; z-index: 100;
+}
+.login-card {
+  background: var(--surface); border-radius: 16px; padding: 36px;
+  width: 360px; box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.login-logo-wrap { text-align: center; margin-bottom: 20px; }
+.login-logo { width: 52px; height: 52px; background: var(--navy-mid); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; box-shadow: 0 4px 14px rgba(26,58,92,0.4); }
+.login-logo .ti { font-size: 26px; color: var(--gold); }
+.login-title { font-size: 17px; font-weight: 600; color: var(--text); }
+.login-sub { font-size: 12px; color: var(--text-3); margin-top: 3px; }
+.login-divider { height: 1px; background: var(--border-light); margin: 20px 0; }
+.login-label { font-size: 11px; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 5px; }
+.login-input { width: 100%; padding: 9px 12px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg); font-size: 13px; color: var(--text); outline: none; font-family: inherit; margin-bottom: 12px; }
+.login-input:focus { border-color: var(--navy-mid); box-shadow: 0 0 0 3px rgba(26,58,92,0.1); }
+.login-btns { display: flex; gap: 8px; margin-top: 18px; }
+.login-btns .btn { flex: 1; justify-content: center; padding: 9px; font-size: 13px; }
+.login-footer { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-light); text-align: center; }
+.login-footer a { font-size: 11px; color: var(--text-3); text-decoration: none; }
+.login-footer a:hover { color: var(--navy-mid); }
+
+/* ── FILTER BAR ── */
+.filter-tabs { display: flex; gap: 4px; margin-bottom: 14px; }
+.filter-tab { padding: 5px 12px; border-radius: 20px; font-size: 11.5px; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text-3); transition: all 0.12s; }
+.filter-tab:hover { background: var(--bg); color: var(--text); }
+.filter-tab.active { background: var(--navy-mid); color: #fff; border-color: var(--navy-mid); }
+
+/* ── NOTIFICATION DOT ── */
+.notif { position: relative; }
+.notif-dot { position: absolute; top: 4px; right: 4px; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); border: 2px solid var(--navy); }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #c0cbdb; }
+
+/* ── STATUS INDICATOR ── */
+.status-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600;
+}
+
+/* ── EMPTY STATE ── */
+.empty-state { text-align: center; padding: 48px 24px; color: var(--text-3); }
+.empty-state .ti { font-size: 40px; display: block; margin-bottom: 12px; opacity: 0.4; }
+.empty-state p { font-size: 13px; }
+
+/* ── RESPONSIVE HELPERS ── */
+.hidden { display: none !important; }
+
+/* ── ENHANCED DESIGN OVERRIDES ── */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --navy: #07192b;
+  --navy-mid: #0f2d4a;
+  --navy-light: #1a4570;
+  --gold: #c8952a;
+  --gold-light: #e8b84b;
+  --gold-pale: #fdf3de;
+  --bg: #eef1f6;
+  --bg2: #e2e7ef;
+  --surface: #ffffff;
+  --surface2: #f7f9fc;
+  --border: #dde3ed;
+  --border-light: #eef1f6;
+  --text: #0d1f33;
+  --text-2: #3d556e;
+  --text-3: #7a90a8;
+  --success: #0a7a52;
+  --success-bg: #e4f5ee;
+  --success-border: #b3e0ce;
+  --warn: #a35208;
+  --warn-bg: #fef0e0;
+  --warn-border: #fbc48a;
+  --danger: #b41c1c;
+  --danger-bg: #fee2e2;
+  --info: #1945c8;
+  --info-bg: #dbeafe;
+  --info-border: #93c5fd;
+  --purple: #6b21a8;
+  --purple-bg: #f3e8ff;
+  --purple-border: #d8b4fe;
+  --nav-h: 62px;
+  --sidebar-w: 240px;
+  --radius: 9px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 6px 16px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.1), 0 1px 4px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-gold: 0 4px 20px rgba(200,149,42,0.25);
+}
+
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); }
+
+/* TOP NAV */
+.topnav {
+  height: var(--nav-h);
+  background: var(--navy);
+  padding: 0 24px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.25);
+  position: relative;
+}
+.topnav::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200,149,42,0.5), transparent);
+}
+.brand-logo {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border-radius: 10px; font-family: 'Syne', sans-serif; font-weight: 700;
+  box-shadow: var(--shadow-gold); position: relative; overflow: hidden;
+}
+.brand-logo::after {
+  content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent 50%);
+}
+.brand-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13.5px; }
+.brand-sub { font-size: 9.5px; letter-spacing: 0.7px; }
+
+.topnav-center {
+  background: rgba(255,255,255,0.06); padding: 4px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.topnav-tab { font-family: 'DM Sans', sans-serif; font-weight: 500; padding: 6px 20px; }
+.topnav-tab.active {
+  background: linear-gradient(135deg, var(--navy-light), rgba(26,69,112,0.9));
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.clock {
+  font-family: 'DM Mono', monospace; letter-spacing: 0.3px;
+  padding: 5px 10px; background: rgba(255,255,255,0.05);
+  border-radius: 6px; border: 1px solid rgba(255,255,255,0.08);
+}
+.avatar {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 11px;
+  box-shadow: 0 2px 8px rgba(200,149,42,0.4);
+}
+.notif-dot { animation: notifPulse 2.5s infinite; }
+@keyframes notifPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(200,149,42,0.5); } 50% { box-shadow: 0 0 0 4px rgba(200,149,42,0); } }
+
+/* SIDEBAR */
+.sidebar { padding: 16px 0 24px; box-shadow: 2px 0 12px rgba(0,0,0,0.04); }
+.sidebar-label { font-family: 'Syne', sans-serif; font-size: 9.5px; font-weight: 700; letter-spacing: 1.2px; padding: 14px 20px 6px; }
+.sidebar-item { padding: 9px 20px; font-size: 13px; border-left: 2.5px solid transparent; margin: 1px 0; }
+.sidebar-item .ti { font-size: 16px; opacity: 0.75; transition: opacity 0.15s; }
+.sidebar-item:hover .ti { opacity: 1; }
+.sidebar-item.active {
+  background: linear-gradient(90deg, rgba(15,45,74,0.07), transparent);
+  color: var(--navy-mid); border-left-color: var(--gold); font-weight: 600;
+}
+.sidebar-item.active .ti { opacity: 1; color: var(--gold); }
+.sidebar-badge { border-radius: 20px; font-family: 'DM Mono', monospace; font-weight: 700; padding: 2px 8px; font-size: 10px; }
+.sidebar-badge { background: rgba(200,149,42,0.15); color: var(--gold); }
+.sidebar-badge.blue { background: rgba(15,45,74,0.12); color: var(--navy-mid); }
+
+/* STATS */
+.stats-row { gap: 14px; margin-bottom: 22px; }
+.stat-card {
+  padding: 18px 20px; border-radius: var(--radius-lg);
+  position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.stat-card::after { content: ''; position: absolute; top: 0; right: 0; width: 80px; height: 80px; border-radius: 0 0 0 80px; opacity: 0.06; }
+.stat-card:nth-child(1)::after { background: var(--navy-mid); }
+.stat-card:nth-child(2)::after { background: var(--info); }
+.stat-card:nth-child(3)::after { background: var(--success); }
+.stat-card:nth-child(4)::after { background: var(--warn); }
+.stat-label { font-family: 'Syne', sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.stat-value { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -1px; }
+
+/* CARD */
+.card-header {
+  padding: 16px 20px;
+  background: linear-gradient(180deg, var(--surface2), var(--surface));
+}
+.card-title { font-family: 'Syne', sans-serif; font-weight: 700; }
+
+/* SEARCH BOX */
+.search-box { width: 230px; padding: 7px 12px; transition: all 0.15s; }
+.search-box:focus-within { border-color: var(--navy-light); box-shadow: 0 0 0 3px rgba(26,69,112,0.1); background: var(--surface); }
+
+/* TABLE */
+th { font-family: 'Syne', sans-serif; letter-spacing: 0.7px; background: var(--surface2); font-size: 10.5px; }
+tbody tr:hover td { background: rgba(15,45,74,0.03); }
+.shipment-id { font-family: 'DM Mono', monospace; font-size: 11.5px; letter-spacing: 0.2px; }
+.cell-secondary { font-family: 'DM Mono', monospace; font-size: 11px; }
+
+/* BADGES */
+.badge { border: 1px solid transparent; border-radius: 20px; font-weight: 600; }
+.badge-transit { border-color: var(--info-border); }
+.badge-arrived { border-color: var(--success-border); }
+.badge-pending { border-color: var(--warn-border); }
+.badge-customs { border-color: var(--purple-border); }
+
+/* DETAIL PANEL */
+.detail-overlay { box-shadow: -8px 0 30px rgba(0,0,0,0.1); }
+.detail-overlay.open { animation: slideInEnhanced 0.24s cubic-bezier(0.16,1,0.3,1); }
+@keyframes slideInEnhanced { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.detail-header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+  position: relative; overflow: hidden;
+}
+.detail-header::before {
+  content: ''; position: absolute; right: -20px; top: -20px;
+  width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.04);
+}
+.detail-id { font-family: 'DM Mono', monospace; color: #fff; font-size: 15px; font-weight: 700; position: relative; z-index: 1; }
+.detail-shipper { color: rgba(255,255,255,0.55); font-size: 12px; margin-top: 4px; position: relative; z-index: 1; }
+#detailBadge { position: relative; z-index: 1; margin-top: 9px; }
+.detail-section-label { font-family: 'Syne', sans-serif; font-size: 9.5px; font-weight: 700; letter-spacing: 1.1px; padding-bottom: 8px; border-bottom: 1px solid var(--border-light); }
+.detail-row label { font-weight: 500; }
+.detail-row span { font-weight: 600; color: var(--text); }
+
+/* TIMELINE */
+.tl-dot.done { box-shadow: 0 0 0 3px rgba(10,122,82,0.15); }
+.tl-dot.active { animation: dotPulse 2s infinite; }
+@keyframes dotPulse { 0%,100% { box-shadow: 0 0 0 3px rgba(200,149,42,0.2); } 50% { box-shadow: 0 0 0 6px rgba(200,149,42,0.05); } }
+.tl-title { font-family: 'Syne', sans-serif; font-size: 12.5px; font-weight: 600; }
+.tl-meta { font-family: 'DM Mono', monospace; }
+
+/* DOCS */
+.doc-item { transition: all 0.13s; }
+.doc-item:hover { background: var(--surface); border-color: var(--border); }
+
+/* FORMS */
+.form-section-title { font-family: 'Syne', sans-serif; font-weight: 700; padding-bottom: 12px; border-bottom: 1px solid var(--border-light); }
+.form-section-title .ti { color: var(--gold); }
+.form-label { font-family: 'Syne', sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: 0.6px; }
+.form-input { font-family: 'DM Sans', sans-serif; }
+.form-input:focus { border-color: var(--navy-light); box-shadow: 0 0 0 3px rgba(26,69,112,0.1); }
+.upload-zone:hover { border-color: var(--gold); color: var(--navy-mid); border-style: solid; }
+.upload-zone:hover .ti { color: var(--gold); }
+
+/* PORTAL */
+.portal-hero {
+  border-radius: var(--radius-xl);
+  box-shadow: 0 8px 32px rgba(7,25,43,0.35);
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--navy-light) 100%);
+}
+.portal-title { font-family: 'Syne', sans-serif; font-size: 19px; font-weight: 800; }
+.portal-search input:focus { border-color: rgba(200,149,42,0.6); box-shadow: 0 0 0 3px rgba(200,149,42,0.15); }
+
+/* SHIPMENT CARDS */
+.shipment-card { position: relative; overflow: hidden; }
+.shipment-card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: var(--border); transition: background 0.18s;
+}
+.shipment-card:hover::before { background: var(--gold); }
+.shipment-card:hover { border-color: rgba(200,149,42,0.3); box-shadow: 0 6px 20px rgba(15,45,74,0.1); }
+.sc-id { font-family: 'DM Mono', monospace; font-weight: 700; }
+.sc-hbl { font-family: 'DM Mono', monospace; }
+.progress-fill { background: linear-gradient(90deg, var(--navy-mid), var(--gold-light)); border-radius: 3px; }
+.route-dates { font-family: 'DM Mono', monospace; }
+.pct { font-weight: 700; }
+
+/* LOGIN */
+.login-screen {
+  background: linear-gradient(135deg, #06141f 0%, #0d2b44 50%, #1a4570 100%);
+}
+.login-card {
+  background: rgba(255,255,255,0.97);
+  border-radius: 20px; padding: 38px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+}
+.login-logo {
+  background: linear-gradient(135deg, var(--navy-mid), var(--navy-light));
+  border-radius: 14px; width: 56px; height: 56px;
+  box-shadow: 0 6px 20px rgba(15,45,74,0.4);
+}
+.login-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; }
+.login-label { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.6px; }
+.login-input { font-family: 'DM Sans', sans-serif; border-radius: var(--radius); border-width: 1.5px; }
+.login-input:focus { border-color: var(--navy-light); box-shadow: 0 0 0 3px rgba(26,69,112,0.1); }
+
+/* BUTTONS */
+.btn-primary { background: var(--navy-mid); box-shadow: 0 2px 8px rgba(15,45,74,0.3); }
+.btn-primary:hover { background: var(--navy); box-shadow: 0 3px 12px rgba(15,45,74,0.4); }
+.btn-gold { background: linear-gradient(135deg, var(--gold), var(--gold-light)); border-color: transparent; box-shadow: 0 2px 10px rgba(200,149,42,0.35); }
+.btn-gold:hover { background: linear-gradient(135deg, #b07c20, var(--gold)); box-shadow: 0 3px 14px rgba(200,149,42,0.45); }
+
+/* FILTER TABS */
+.filter-tab.active { background: var(--navy-mid); border-color: var(--navy-mid); box-shadow: 0 2px 8px rgba(15,45,74,0.25); }
+
+/* PAGE TITLE */
+.page-title { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -0.4px; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar-thumb { border-radius: 4px; }
+
+/* SIDEBAR BADGE COLORS */
+.sidebar-badge[style*="background:var(--success)"] { background: var(--success-bg) !important; color: var(--success) !important; }
+.sidebar-badge[style*="background:var(--purple)"] { background: var(--purple-bg) !important; color: var(--purple) !important; }
+
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo-wrap">
+      <div class="login-logo"><i class="ti ti-ship"></i></div>
+      <div class="login-title">Al Qabandi & Partners</div>
+      <div class="login-sub">Shipment Tracking System · Kuwait</div>
+    </div>
+    <div class="login-divider"></div>
+    <label class="login-label">User ID</label>
+    <input class="login-input" type="text" placeholder="Enter your user ID" id="loginUser" value="admin">
+    <label class="login-label">Password</label>
+    <input class="login-input" type="password" placeholder="••••••••" id="loginPass" value="123">
+    <div class="login-btns">
+      <button class="btn btn-primary" onclick="doLogin('admin')"><i class="ti ti-layout-dashboard"></i> Admin</button>
+      <button class="btn btn-gold" onclick="doLogin('user')"><i class="ti ti-eye"></i> Client Portal</button>
+    </div>
+    <div class="login-footer">
+      <a href="tel:+96522406262"><i class="ti ti-phone" style="font-size:10px;"></i> +965 2240 6262</a>
+      &nbsp;·&nbsp;
+      <a href="mailto:projectsales@qabandi.com">projectsales@qabandi.com</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN APP ══ -->
+<div id="mainApp" style="display:none; flex-direction:column; flex:1; height:100vh; overflow:hidden;">
+
+  <!-- Top Nav -->
+  <div class="topnav">
+    <div class="brand">
+      <div class="brand-logo">AQ</div>
+      <div>
+        <div class="brand-name">Al Qabandi & Partners</div>
+        <div class="brand-sub">Customs · Freight · Shipping · Warehousing</div>
+      </div>
+    </div>
+
+    <div class="topnav-center" id="navTabs">
+      <button class="topnav-tab active" onclick="switchMode('admin')" id="adminTab">
+        <i class="ti ti-layout-dashboard"></i> Admin
+      </button>
+      <button class="topnav-tab" onclick="switchMode('user')" id="userTab">
+        <i class="ti ti-eye"></i> Client Portal
+      </button>
+    </div>
+
+    <div class="topnav-right">
+      <span class="clock" id="clockDisplay"></span>
+      <div class="notif">
+        <button class="icon-btn" title="Notifications"><i class="ti ti-bell"></i></button>
+        <div class="notif-dot"></div>
+      </div>
+      <div class="avatar" id="avatarBtn">AD</div>
+      <button class="icon-btn" onclick="logout()" title="Logout"><i class="ti ti-logout"></i></button>
+    </div>
+  </div>
+
+  <div class="app-body">
+
+    <!-- ═══ ADMIN SIDE ═══ -->
+    <div id="adminSide" style="display:flex; flex:1; overflow:hidden;">
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="sidebar-label">Shipments</div>
+        <div class="sidebar-item active" onclick="selectAllShipments(this)">
+          <i class="ti ti-list"></i> All Shipments <span class="sidebar-badge">14</span>
+          <i class="ti ti-chevron-down submenu-chevron rotated" id="shipmentsChevron"></i>
+        </div>
+        <div class="sidebar-submenu open" id="shipmentsSubmenu">
+          <div class="sidebar-subitem" onclick="filterByMinistry('Ministry of Defence', this)">Ministry of Defence</div>
+          <div class="sidebar-subitem" onclick="filterByMinistry('Ministry of Interior', this)">Ministry of Interior</div>
+          <div class="sidebar-subitem" onclick="filterByMinistry('Ministry of Health', this)">Ministry of Health</div>
+          <div class="sidebar-subitem" onclick="filterByMinistry('Ministry of Foreign Affairs', this)">Ministry of Foreign Affairs</div>
+        </div>
+        <div class="sidebar-item" onclick="setAdminPage('add', this)">
+          <i class="ti ti-plus"></i> Add Shipment
+        </div>
+        <div class="sidebar-item" onclick="filterPage('transit', this)">
+          <i class="ti ti-ship"></i> In Transit <span class="sidebar-badge blue">8</span>
+        </div>
+        <div class="sidebar-item" onclick="filterPage('arrived', this)">
+          <i class="ti ti-circle-check"></i> Arrived <span class="sidebar-badge" style="background:var(--success);">5</span>
+        </div>
+        <div class="sidebar-item" onclick="filterPage('customs', this)">
+          <i class="ti ti-alert-circle"></i> Customs <span class="sidebar-badge" style="background:var(--purple);">1</span>
+        </div>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-label">Documents</div>
+        <div class="sidebar-item" onclick="setAdminPage('list', this)">
+          <i class="ti ti-file-text"></i> Documents
+        </div>
+        <div class="sidebar-item" onclick="setAdminPage('list', this)">
+          <i class="ti ti-upload"></i> Upload Files
+        </div>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-label">Management</div>
+        <div class="sidebar-item" onclick="setAdminPage('list', this)">
+          <i class="ti ti-chart-bar"></i> Reports
+        </div>
+        <div class="sidebar-item" onclick="setAdminPage('list', this)">
+          <i class="ti ti-users"></i> Clients
+        </div>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-label">System</div>
+        <div class="sidebar-item" onclick="setAdminPage('list', this)">
+          <i class="ti ti-settings"></i> Settings
+        </div>
+      </div>
+
+      <!-- Content wrap -->
+      <div class="content-wrap">
+        <div class="content" id="adminContent">
+
+          <!-- LIST PAGE -->
+          <div class="page active" id="adminListPage">
+            <div class="page-header">
+              <div>
+                <div class="page-title">Shipment Management</div>
+                <div class="page-sub" id="adminListSub">Al Qabandi & Partners Co. W.L.L. — Kuwait</div>
+              </div>
+              <button class="btn btn-primary" onclick="setAdminPage('add', null)">
+                <i class="ti ti-plus"></i> Add Shipment
+              </button>
+            </div>
+
+            <div class="stats-row">
+              <div class="stat-card">
+                <div class="stat-icon navy"><i class="ti ti-package"></i></div>
+                <div class="stat-label">Total Shipments</div>
+                <div class="stat-value">14</div>
+                <div class="stat-delta up"><i class="ti ti-trending-up" style="font-size:11px;"></i> +3 this month</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon blue"><i class="ti ti-ship"></i></div>
+                <div class="stat-label">In Transit</div>
+                <div class="stat-value">8</div>
+                <div class="stat-delta neutral">Active now</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon green"><i class="ti ti-circle-check"></i></div>
+                <div class="stat-label">Arrived</div>
+                <div class="stat-value">5</div>
+                <div class="stat-delta up">On schedule</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon warn"><i class="ti ti-alert-circle"></i></div>
+                <div class="stat-label">Pending Customs</div>
+                <div class="stat-value">1</div>
+                <div class="stat-delta down"><i class="ti ti-alert-triangle" style="font-size:11px;"></i> Needs attention</div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">Shipment List</div>
+                  <div class="card-sub">Click a row to view full details</div>
+                </div>
+                <div class="toolbar">
+                  <div class="search-box">
+                    <i class="ti ti-search"></i>
+                    <input id="tableSearch" placeholder="Search ID, HBL, shipper..." oninput="filterTable(this.value)">
+                  </div>
+                  <select class="btn" id="statusFilter" onchange="filterTable(document.getElementById('tableSearch').value)" style="cursor:pointer;">
+                    <option value="">All Status</option>
+                    <option value="transit">In Transit</option>
+                    <option value="arrived">Arrived</option>
+                    <option value="customs">Customs</option>
+                    <option value="pending">Pending</option>
+                  </select>
+                  <button class="btn" onclick="printTable()"><i class="ti ti-printer"></i> Print</button>
+                  <button class="btn btn-primary" onclick="exportCSV()"><i class="ti ti-download"></i> Export</button>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Shipment ID</th>
+                      <th>Shipper Name</th>
+                      <th>Ministry</th>
+                      <th>HBL No.</th>
+                      <th>Container</th>
+                      <th>Port of Loading</th>
+                      <th>ETD</th>
+                      <th>ETA</th>
+                      <th>Status</th>
+                      <th>Progress</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- ADD PAGE -->
+          <div class="page" id="adminAddPage">
+            <div class="page-header">
+              <div>
+                <div class="page-title">Add New Shipment</div>
+                <div class="page-sub">Create a new shipment tracking record</div>
+              </div>
+              <button class="btn" onclick="setAdminPage('list', null)">
+                <i class="ti ti-arrow-left"></i> Back to List
+              </button>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title"><i class="ti ti-id"></i> Shipment Identification</div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Transport Mode</label>
+                  <select class="form-input" id="transportModeSelect" onchange="handleTransportMode(this.value)">
+                    <option>Sea Freight</option>
+                    <option>Air Freight</option>
+                    <option>Road Freight</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Shipment Type</label>
+                  <select class="form-input">
+                    <option>FCL</option>
+                    <option>LCL</option>
+                    <option>Bulk</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Shipment ID</label>
+                  <input class="form-input" placeholder="e.g. SIGN-P00865" value="SIGN-P00865">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Booking Date</label>
+                  <input class="form-input" type="date">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" id="hblLabel">HBL Number</label>
+                  <input class="form-input" id="hblInput" placeholder="House Bill of Lading No.">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" id="mblLabel">MBL Number</label>
+                  <input class="form-input" id="mblInput" placeholder="Master Bill of Lading No.">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Date of Receipt</label>
+                  <input class="form-input" type="date">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Transaction Number</label>
+                  <input class="form-input" placeholder="e.g. TXN-2026-00451">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title"><i class="ti ti-building-warehouse"></i> Shipper & Consignee</div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Shipper Name</label>
+                  <input class="form-input" placeholder="Shipper company name">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Consignee Name</label>
+                  <input class="form-input" placeholder="Consignee company name">
+                </div>
+                <div class="form-group full">
+                  <label class="form-label">Shipper Address</label>
+                  <input class="form-input" placeholder="Full shipper address">
+                </div>
+                <div class="form-group full">
+                  <label class="form-label">Consignee Address (Kuwait)</label>
+                  <input class="form-input" placeholder="Full consignee address in Kuwait">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title"><i class="ti ti-route"></i> Route & Vessel Details</div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label" id="polLabel">Port of Loading (POL)</label>
+                  <input class="form-input" id="polInput" placeholder="e.g. Xiamen, China">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" id="podLabel">Port of Discharge (POD)</label>
+                  <input class="form-input" id="podInput" value="Shuaiba, Kuwait">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">ETD (Departure)</label>
+                  <input class="form-input" type="date">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">ETA (Arrival)</label>
+                  <input class="form-input" type="date">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" id="shippingLineLabel">Shipping Line</label>
+                  <input class="form-input" id="shippingLineInput" placeholder="e.g. MAERSK">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" id="vesselLabel">Vessel Name</label>
+                  <input class="form-input" id="vesselInput" placeholder="e.g. MAERSK YORKTOWN">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title"><i class="ti ti-box"></i> Cargo Details</div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Container Number</label>
+                  <input class="form-input" placeholder="e.g. CLHU9076863">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Container Type</label>
+                  <select class="form-input">
+                    <option>20GP</option>
+                    <option>40GP</option>
+                    <option selected>40HC</option>
+                    <option>20RF</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Cargo Description</label>
+                  <input class="form-input" placeholder="e.g. Plastic Foods">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Volume</label>
+                  <input class="form-input" placeholder="e.g. 1×40">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Quantity</label>
+                  <input class="form-input" type="number" placeholder="400">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Weight (kg)</label>
+                  <input class="form-input" type="number" placeholder="24000">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Status</label>
+                  <select class="form-input">
+                    <option value="pending">Pending</option>
+                    <option value="transit">In Transit</option>
+                    <option value="customs">Customs</option>
+                    <option value="arrived">Arrived</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Progress (%)</label>
+                  <input class="form-input" type="number" min="0" max="100" placeholder="0">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section" id="airCustomsSection" style="display:none;">
+              <div class="form-section-title"><i class="ti ti-receipt-2"></i> Customs Clearance & Financial Details</div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Foreign Contract Invoice Number</label>
+                  <input class="form-input" placeholder="e.g. FCI-2026-0142">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Invoice Amount</label>
+                  <input class="form-input" type="number" placeholder="e.g. 4500">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Customs Declaration Number</label>
+                  <input class="form-input" placeholder="e.g. CD-2026-0891">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Customs Declaration Date</label>
+                  <input class="form-input" type="date">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Amount of Paid Customs Duty</label>
+                  <input class="form-input" type="number" placeholder="e.g. 225">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Bank Receipt Number</label>
+                  <input class="form-input" placeholder="e.g. BR-2026-3390">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Bank Receipt Date</label>
+                  <input class="form-input" type="date">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title"><i class="ti ti-file"></i> Documents Upload</div>
+              <div class="upload-grid">
+                <div class="upload-zone"><i class="ti ti-file-invoice"></i>House Bill (Draft)<br><small>Click to upload</small></div>
+                <div class="upload-zone"><i class="ti ti-receipt"></i>Commercial Invoice<br><small>Click to upload</small></div>
+                <div class="upload-zone"><i class="ti ti-certificate"></i>Certificate of Origin<br><small>Click to upload</small></div>
+                <div class="upload-zone"><i class="ti ti-clipboard-list"></i>Packing List<br><small>Click to upload</small></div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn" onclick="setAdminPage('list', null)">Cancel</button>
+              <button class="btn btn-primary" onclick="showSaved()"><i class="ti ti-device-floppy"></i> Save Shipment</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Detail Slide Panel -->
+        <div class="detail-overlay" id="adminDetail">
+          <div class="detail-header">
+            <div>
+              <div class="detail-id" id="detailId">SIGN-P00851</div>
+              <div class="detail-shipper" id="detailShipper">Fujian yiboyou</div>
+              <div id="detailBadge" style="margin-top:8px;"></div>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn-sm btn-gold"><i class="ti ti-edit"></i> Edit</button>
+              <button class="action-btn" onclick="closeDetail()"><i class="ti ti-x"></i></button>
+            </div>
+          </div>
+          <div class="detail-body">
+
+            <div class="detail-section">
+              <div class="detail-section-label">Journey Progress</div>
+              <div class="progress-track" style="height:6px;margin-bottom:6px;">
+                <div class="progress-fill" id="detailProgress" style="width:60%;"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--text-3);margin-bottom:14px;">
+                <span id="detailPol">Xiamen, China</span>
+                <span id="detailPct" style="font-weight:600;color:var(--navy-mid);">60%</span>
+                <span>Shuaiba, Kuwait</span>
+              </div>
+
+              <div class="detail-section-label">Status Timeline</div>
+              <div class="timeline" id="detailTimeline">
+                <!-- populated by JS -->
+              </div>
+            </div>
+
+            <div class="detail-section">
+              <div class="detail-section-label">Shipment Details</div>
+              <div id="detailRows"></div>
+            </div>
+
+            <div class="detail-section">
+              <div class="detail-section-label">Documents</div>
+              <div class="doc-list">
+                <div class="doc-item">
+                  <div class="doc-item-left"><i class="ti ti-file-invoice" style="color:var(--info);"></i> House Bill (Draft)</div>
+                  <button class="action-btn"><i class="ti ti-download"></i></button>
+                </div>
+                <div class="doc-item">
+                  <div class="doc-item-left"><i class="ti ti-receipt" style="color:var(--success);"></i> Commercial Invoice</div>
+                  <button class="action-btn"><i class="ti ti-download"></i></button>
+                </div>
+                <div class="doc-item">
+                  <div class="doc-item-left"><i class="ti ti-certificate" style="color:var(--warn);"></i> Certificate of Origin</div>
+                  <button class="action-btn"><i class="ti ti-download"></i></button>
+                </div>
+                <div class="doc-item">
+                  <div class="doc-item-left"><i class="ti ti-clipboard-list" style="color:var(--text-3);"></i> Packing List</div>
+                  <button class="action-btn"><i class="ti ti-download"></i></button>
+                </div>
+                <div class="doc-item">
+                  <div class="doc-item-left"><i class="ti ti-certificate-2" style="color:var(--danger);"></i> TIR Certificate</div>
+                  <button class="action-btn"><i class="ti ti-download"></i></button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ CLIENT PORTAL ═══ -->
+    <div id="userSide" style="display:none; flex:1; overflow:hidden;">
+      <div class="content">
+
+        <div class="portal-hero">
+          <div class="portal-title">Track Your Shipment</div>
+          <div class="portal-sub">Al Qabandi & Partners Co. W.L.L. · Shuaiba, Kuwait</div>
+          <div class="portal-search">
+            <input id="portalSearch" placeholder="Enter Shipment ID, HBL number or Container number…" oninput="filterUserList(this.value)">
+            <button class="btn btn-gold" style="padding:10px 16px;"><i class="ti ti-search"></i> Track</button>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+          <div>
+            <span style="font-size:14px;font-weight:600;">Your Shipments</span>
+            <span style="font-size:12px;color:var(--text-3);margin-left:8px;" id="shipCount">14 shipments</span>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <div class="filter-tabs" id="userFilterTabs">
+              <div class="filter-tab active" onclick="setUserFilter('all', this)">All</div>
+              <div class="filter-tab" onclick="setUserFilter('transit', this)">In Transit</div>
+              <div class="filter-tab" onclick="setUserFilter('arrived', this)">Arrived</div>
+              <div class="filter-tab" onclick="setUserFilter('customs', this)">Customs</div>
+            </div>
+            <button class="btn btn-sm"><i class="ti ti-printer"></i></button>
+          </div>
+        </div>
+
+        <div id="userShipmentList"></div>
+      </div>
+    </div>
+
+  </div><!-- app-body -->
+</div><!-- mainApp -->
+
+<script>
+// ─── DATA ───
+// ─── MINISTRY ID PREFIXES ───
+const ministryPrefix = {
+  'Ministry of Defence': 'AMOD',
+  'Ministry of Interior': 'AMOI',
+  'Ministry of Health': 'AMOH',
+  'Ministry of Foreign Affairs': 'AMOFA',
+};
+function displayId(s) {
+  if (currentMinistryFilter && s.ministry === currentMinistryFilter && ministryPrefix[s.ministry]) {
+    return s.id.replace('SIGN', ministryPrefix[s.ministry]);
+  }
+  return s.id;
+}
+
+const shipments = [
+  {id:'SIGN-P00851',shipper:'Fujian Yiboyou',hbl:'WOLSZSE25082945',mbl:'MAEU258177596',container:'CLHU9076863',ctype:'40HC',pol:'Xiamen, China',pod:'Shuaiba, Kuwait',etd:'28/07/2025',eta:'20/08/2025',status:'transit',progress:60,line:'MAERSK',vessel:'MAERSK YORKTOWN 534N',cargo:'Plastic Foods',volume:'1×40',qty:'400 units / 60 pallets',weight:'24,000 kg',ministry:'Ministry of Defence'},
+  {id:'SIGN-P00852',shipper:'Yuyao Hualun Import',hbl:'HSW2508965',mbl:'HLCUXIA2508123',container:'FANU5583691',ctype:'40GP',pol:'Shanghai, China',pod:'Shuaiba, Kuwait',etd:'14/07/2025',eta:'15/08/2025',status:'arrived',progress:100,line:'HAPAG-LLOYD',vessel:'SOPHIA 021E',cargo:'Kitchenware',volume:'1×40',qty:'300 units',weight:'18,000 kg',ministry:'Ministry of Interior'},
+  {id:'SIGN-P00853',shipper:'Zhejiang Holding Co',hbl:'WOLSZSE25082256',mbl:'COSU2508331',container:'MSDU1918773',ctype:'20GP',pol:'Xiamen, China',pod:'Shuaiba, Kuwait',etd:'02/06/2025',eta:'03/07/2025',status:'arrived',progress:100,line:'COSCO',vessel:'COSCO HARMONY',cargo:'Hardware',volume:'1×20',qty:'500 units',weight:'12,000 kg',ministry:'Ministry of Health'},
+  {id:'SIGN-P00854',shipper:'Kingster Kitchen',hbl:'WHSES12545',mbl:'HLCU2508456',container:'CLHU9076863',ctype:'40HC',pol:'Ningbo, China',pod:'Shuaiba, Kuwait',etd:'01/05/2025',eta:'03/06/2025',status:'customs',progress:85,line:'HAPAG-LLOYD',vessel:'MÜNSTERLAND',cargo:'Kitchen Equipment',volume:'1×40HC',qty:'250 units',weight:'15,600 kg',ministry:'Ministry of Foreign Affairs'},
+  {id:'SIGN-P00855',shipper:'Xiamen Yamat',hbl:'HSW2508965',mbl:'MAEU2508221',container:'CAIU9076863',ctype:'40GP',pol:'Xiamen, China',pod:'Shuaiba, Kuwait',etd:'21/03/2025',eta:'23/04/2025',status:'arrived',progress:100,line:'MAERSK',vessel:'MAERSK CALLAO',cargo:'Electronics',volume:'1×40',qty:'600 units',weight:'21,000 kg',ministry:'Ministry of Defence'},
+  {id:'SIGN-P00856',shipper:'Perfect Wares',hbl:'WHSWE02145',mbl:'OOLU2508001',container:'MSDU9087852',ctype:'20GP',pol:'Shanghai, China',pod:'Shuaiba, Kuwait',etd:'14/02/2025',eta:'15/03/2025',status:'arrived',progress:100,line:'OOCL',vessel:'OOCL BEIJING',cargo:'General Merchandise',volume:'1×20',qty:'480 units',weight:'11,200 kg',ministry:'Ministry of Interior'},
+  {id:'SIGN-P00857',shipper:'Ningbo Primax',hbl:'WHS2508329',mbl:'EVGG2508034',container:'CXDU1810033',ctype:'40HC',pol:'Xiamen, China',pod:'Shuaiba, Kuwait',etd:'02/01/2025',eta:'03/02/2025',status:'transit',progress:45,line:'EVERGREEN',vessel:'EVER GOLDEN',cargo:'Plastics',volume:'1×40HC',qty:'350 units',weight:'19,000 kg',ministry:'Ministry of Health'},
+  {id:'SIGN-P00858',shipper:'Yuyao Hualun Import',hbl:'WHS2508327',mbl:'MSCU2508112',container:'MSMU4277664',ctype:'40GP',pol:'Shanghai, China',pod:'Shuaiba, Kuwait',etd:'13/11/2024',eta:'14/12/2024',status:'transit',progress:30,line:'MSC',vessel:'MSC VALENTINA',cargo:'Consumer Goods',volume:'1×40',qty:'420 units',weight:'17,500 kg',ministry:'Ministry of Foreign Affairs'},
+  {id:'SIGN-P00859',shipper:'Zhejiang Holding Co',hbl:'WHS2508221',mbl:'HLCU2508789',container:'MSNU7913948',ctype:'40GP',pol:'Shanghai, China',pod:'Shuaiba, Kuwait',etd:'11/10/2024',eta:'12/11/2024',status:'transit',progress:70,line:'HAPAG-LLOYD',vessel:'HONG KONG EXPRESS',cargo:'Textiles',volume:'1×40',qty:'800 units',weight:'22,000 kg',ministry:'Ministry of Defence'},
+  {id:'SIGN-P00860',shipper:'Kingster Kitchen',hbl:'WHS2508222',mbl:'COSU2508902',container:'TXGU5430810',ctype:'40HC',pol:'Ningbo, China',pod:'Shuaiba, Kuwait',etd:'09/09/2024',eta:'10/10/2024',status:'arrived',progress:100,line:'COSCO',vessel:'COSCO PRIDE',cargo:'Kitchen Appliances',volume:'1×40HC',qty:'200 units',weight:'16,800 kg',ministry:'Ministry of Interior'},
+  {id:'SIGN-P00861',shipper:'Xiamen Yamat',hbl:'WHS2508191',mbl:'MAEU2508433',container:'MSDU1918773',ctype:'20GP',pol:'Xiamen, China',pod:'Shuaiba, Kuwait',etd:'08/08/2024',eta:'08/09/2024',status:'transit',progress:55,line:'MAERSK',vessel:'MAERSK ENFIELD',cargo:'Auto Parts',volume:'1×20',qty:'100 units',weight:'8,500 kg',ministry:'Ministry of Health'},
+  {id:'SIGN-P00862',shipper:'Yiliang Plastics',hbl:'WHS2508161',mbl:'OOLU2508567',container:'TCLU93330636',ctype:'40GP',pol:'Shanghai, China',pod:'Shuaiba, Kuwait',etd:'07/07/2024',eta:'07/08/2024',status:'transit',progress:80,line:'OOCL',vessel:'OOCL GERMANY',cargo:'Plastic Goods',volume:'1×40',qty:'550 units',weight:'13,200 kg',ministry:'Ministry of Foreign Affairs'},
+  {id:'SIGN-P00863',shipper:'Perfect Wares',hbl:'WHS2508277',mbl:'MSCU2508344',container:'TCLU4448732',ctype:'40HC',pol:'Ningbo, China',pod:'Shuaiba, Kuwait',etd:'06/06/2024',eta:'07/07/2024',status:'arrived',progress:100,line:'MSC',vessel:'MSC AURORA',cargo:'Household Items',volume:'1×40HC',qty:'700 units',weight:'25,000 kg',ministry:'Ministry of Defence'},
+  {id:'SIGN-P00864',shipper:'Equilibrium Life System',hbl:'WHS2508307',mbl:'EVGG2508890',container:'CAIU9076656',ctype:'40GP',pol:'Ningbo, China',pod:'Shuaiba, Kuwait',etd:'05/05/2024',eta:'06/06/2024',status:'arrived',progress:100,line:'EVERGREEN',vessel:'EVER GIVEN',cargo:'Health Products',volume:'1×40',qty:'320 units',weight:'9,800 kg',ministry:'Ministry of Interior'},
+];
+
+// ─── BADGE HTML ───
+function badgeHTML(status) {
+  const map = {
+    transit: ['badge-transit','In Transit'],
+    arrived: ['badge-arrived','Arrived'],
+    customs: ['badge-customs','In Customs'],
+    pending: ['badge-pending','Pending'],
+  };
+  const [cls, label] = map[status] || ['badge-pending','Unknown'];
+  return `<span class="badge ${cls}"><span class="badge-dot"></span>${label}</span>`;
+}
+
+// ─── PROGRESS MINI ───
+function progressMini(pct) {
+  return `<div style="display:flex;align-items:center;gap:6px;min-width:80px;">
+    <div style="flex:1;height:3px;background:var(--bg2);border-radius:2px;overflow:hidden;">
+      <div style="height:100%;width:${pct}%;background:var(--navy-mid);border-radius:2px;"></div>
+    </div>
+    <span style="font-size:10px;color:var(--text-3);font-weight:500;">${pct}%</span>
+  </div>`;
+}
+
+// ─── BUILD ADMIN TABLE ───
+let currentFilter = '';
+let currentMinistryFilter = '';
+function buildAdminTable(filter) {
+  const search = (document.getElementById('tableSearch')?.value || '').toLowerCase();
+  const statusF = document.getElementById('statusFilter')?.value || '';
+  const list = shipments.filter(s => {
+    if (filter && s.status !== filter) return false;
+    if (statusF && s.status !== statusF) return false;
+    if (currentMinistryFilter && s.ministry !== currentMinistryFilter) return false;
+    if (search) return [s.id, s.shipper, s.hbl, s.container, s.pol].some(v => v.toLowerCase().includes(search));
+    return true;
+  });
+  document.getElementById('adminTableBody').innerHTML = list.map(s => `
+    <tr onclick="openDetail('${s.id}')">
+      <td><span class="shipment-id">${displayId(s)}</span></td>
+      <td>${s.shipper}</td>
+      <td><span class="cell-secondary">${s.ministry || '—'}</span></td>
+      <td><span class="cell-secondary">${s.hbl}</span></td>
+      <td><span class="cell-secondary">${s.container} · ${s.ctype}</span></td>
+      <td>${s.pol}</td>
+      <td style="white-space:nowrap;">${s.etd}</td>
+      <td style="white-space:nowrap;">${s.eta}</td>
+      <td>${badgeHTML(s.status)}</td>
+      <td>${progressMini(s.progress)}</td>
+      <td>
+        <div style="display:flex;gap:4px;">
+          <button class="action-btn" title="View" onclick="event.stopPropagation();openDetail('${s.id}')"><i class="ti ti-eye"></i></button>
+          <button class="action-btn" title="Edit" onclick="event.stopPropagation()"><i class="ti ti-edit"></i></button>
+          <button class="action-btn danger" title="Delete" onclick="event.stopPropagation()"><i class="ti ti-trash"></i></button>
+        </div>
+      </td>
+    </tr>`).join('') || `<tr><td colspan="11"><div class="empty-state"><i class="ti ti-package-off"></i><p>No shipments found</p></div></td></tr>`;
+
+  // Reflect active ministry filter in the page subtitle
+  const subEl = document.getElementById('adminListSub');
+  if (subEl) {
+    subEl.textContent = currentMinistryFilter
+      ? `Al Qabandi & Partners Co. W.L.L. — Kuwait · Filtered by ${currentMinistryFilter}`
+      : 'Al Qabandi & Partners Co. W.L.L. — Kuwait';
+  }
+}
+
+function filterTable(val) { buildAdminTable(currentFilter); }
+
+function filterPage(status, el) {
+  currentFilter = status;
+  currentMinistryFilter = '';
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  document.querySelectorAll('.sidebar-subitem').forEach(i => i.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('adminListPage').classList.add('active');
+  closeDetail();
+  buildAdminTable(status);
+}
+
+// ─── ALL SHIPMENTS / MINISTRY SUBMENU ───
+function selectAllShipments(el) {
+  currentMinistryFilter = '';
+  document.querySelectorAll('.sidebar-subitem').forEach(i => i.classList.remove('active'));
+  setAdminPage('list', el);
+
+  const submenu = document.getElementById('shipmentsSubmenu');
+  const chevron = document.getElementById('shipmentsChevron');
+  submenu.classList.add('open');
+  chevron.classList.add('rotated');
+}
+
+function filterByMinistry(ministry, el) {
+  currentFilter = '';
+  currentMinistryFilter = ministry;
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  document.querySelectorAll('.sidebar-subitem').forEach(i => i.classList.remove('active'));
+  document.querySelector('.sidebar-item[onclick^="selectAllShipments"]').classList.add('active');
+  el.classList.add('active');
+
+  document.getElementById('shipmentsSubmenu').classList.add('open');
+  document.getElementById('shipmentsChevron').classList.add('rotated');
+
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('adminListPage').classList.add('active');
+  closeDetail();
+  buildAdminTable('');
+}
+
+// ─── OPEN DETAIL ───
+function openDetail(id) {
+  const s = shipments.find(x => x.id === id);
+  if (!s) return;
+  document.getElementById('adminDetail').classList.add('open');
+  document.getElementById('detailId').textContent = displayId(s);
+  document.getElementById('detailShipper').textContent = s.shipper;
+  document.getElementById('detailBadge').innerHTML = badgeHTML(s.status);
+  document.getElementById('detailProgress').style.width = s.progress + '%';
+  document.getElementById('detailPol').textContent = s.pol;
+  document.getElementById('detailPct').textContent = s.progress + '%';
+
+  // Timeline
+  const steps = [
+    {title:'Booking Confirmed', meta:`${s.etd} · ${s.pol}`, done:true},
+    {title:'Cargo Loaded', meta:`${s.etd} · Port`, done:s.progress>=20},
+    {title:'Vessel Departed', meta:`${s.etd} · ${s.line}`, active:s.status==='transit'&&s.progress<80, done:s.progress>=40},
+    {title:'Arriving at Shuaiba', meta:`ETA: ${s.eta}`, done:s.status==='arrived'||s.status==='customs', active:s.status==='transit'&&s.progress>=70},
+    {title:'Customs Clearance', meta:s.status==='customs'?'In progress':s.status==='arrived'?'Cleared':'Pending', done:s.status==='arrived', active:s.status==='customs'},
+    {title:'Delivered', meta:s.status==='arrived'?'Completed':'Pending', done:s.status==='arrived'},
+  ];
+  document.getElementById('detailTimeline').innerHTML = steps.map((step, i) => `
+    <div class="timeline-item">
+      <div class="tl-line">
+        <div class="tl-dot ${step.done?'done':step.active?'active':'pending'}"></div>
+        ${i < steps.length - 1 ? '<div class="tl-connector"></div>' : ''}
+      </div>
+      <div class="tl-content">
+        <div class="tl-title" style="color:${step.done?'var(--success)':step.active?'var(--gold)':'var(--text-3)'}">${step.title}</div>
+        <div class="tl-meta">${step.meta}</div>
+      </div>
+    </div>`).join('');
+
+  // Detail rows
+  document.getElementById('detailRows').innerHTML = [
+    ['HBL No.', s.hbl], ['MBL No.', s.mbl], ['Origin', s.pol], ['Destination', s.pod],
+    ['ETD', s.etd], ['ETA', s.eta], ['Shipping Line', s.line], ['Vessel', s.vessel],
+    ['Container', `${s.container} · ${s.ctype}`], ['Cargo', s.cargo], ['Volume', s.volume],
+    ['Quantity', s.qty], ['Weight', s.weight],
+  ].map(([lbl, val]) => `<div class="detail-row"><label>${lbl}</label><span>${val}</span></div>`).join('');
+}
+function closeDetail() { document.getElementById('adminDetail').classList.remove('open'); }
+
+// ─── BUILD USER LIST ───
+let userStatusFilter = 'all';
+function buildUserList(search='') {
+  const sl = search.toLowerCase();
+  const list = shipments.filter(s => {
+    if (userStatusFilter !== 'all' && s.status !== userStatusFilter) return false;
+    if (sl) return [s.id, s.hbl, s.container, s.shipper].some(v => v.toLowerCase().includes(sl));
+    return true;
+  });
+  document.getElementById('shipCount').textContent = `${list.length} shipment${list.length !== 1 ? 's' : ''}`;
+  document.getElementById('userShipmentList').innerHTML = list.map(s => `
+    <div class="shipment-card">
+      <div class="sc-top">
+        <div>
+          <div class="sc-id">${s.id}</div>
+          <div class="sc-shipper">${s.shipper}</div>
+          <div class="sc-hbl">${s.hbl}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+          ${badgeHTML(s.status)}
+          <span style="font-size:10px;color:var(--text-3);">${s.line}</span>
+        </div>
+      </div>
+      <div class="route-bar">
+        <span class="port">${s.pol.split(',')[0]}</span>
+        <div class="route-line">
+          <span class="route-ship" style="left:calc(${s.progress}% - 8px);">⛵</span>
+        </div>
+        <span class="port">Shuaiba, KW</span>
+      </div>
+      <div class="progress-track" style="margin-top:10px;">
+        <div class="progress-fill" style="width:${s.progress}%;"></div>
+      </div>
+      <div class="route-dates">
+        <span>ETD: ${s.etd}</span>
+        <span class="pct">${s.progress}% complete</span>
+        <span>ETA: ${s.eta}</span>
+      </div>
+    </div>`).join('') || `<div class="empty-state"><i class="ti ti-package-off"></i><p>No shipments match your search</p></div>`;
+}
+
+function filterUserList(val) { buildUserList(val); }
+
+function setUserFilter(status, el) {
+  userStatusFilter = status;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  buildUserList(document.getElementById('portalSearch')?.value || '');
+}
+
+// ─── MODE SWITCH ───
+function switchMode(mode) {
+  document.getElementById('adminSide').style.display = mode === 'admin' ? 'flex' : 'none';
+  document.getElementById('userSide').style.display = mode === 'user' ? 'flex' : 'none';
+  document.getElementById('adminTab').classList.toggle('active', mode === 'admin');
+  document.getElementById('userTab').classList.toggle('active', mode === 'user');
+  if (mode === 'user') buildUserList();
+}
+
+// ─── PAGES ───
+// ─── TRANSPORT MODE FIELD SWAP ───
+function handleTransportMode(mode) {
+  const isAir = mode === 'Air Freight';
+  document.getElementById('hblLabel').textContent = isAir ? 'HAWB Number' : 'HBL Number';
+  document.getElementById('hblInput').placeholder = isAir ? 'House Air Waybill No.' : 'House Bill of Lading No.';
+  document.getElementById('mblLabel').textContent = isAir ? 'MAWB Number' : 'MBL Number';
+  document.getElementById('mblInput').placeholder = isAir ? 'Master Air Waybill No.' : 'Master Bill of Lading No.';
+  document.getElementById('polLabel').textContent = isAir ? 'Air of Loading (AOL)' : 'Port of Loading (POL)';
+  document.getElementById('polInput').placeholder = isAir ? 'e.g. Dubai, UAE' : 'e.g. Xiamen, China';
+  document.getElementById('podLabel').textContent = isAir ? 'Air of Discharge (AOD)' : 'Port of Discharge (POD)';
+  document.getElementById('shippingLineLabel').textContent = isAir ? 'Air Line' : 'Shipping Line';
+  document.getElementById('shippingLineInput').placeholder = isAir ? 'e.g. EMIRATES SKYCARGO' : 'e.g. MAERSK';
+  document.getElementById('vesselLabel').textContent = isAir ? 'Flight Number' : 'Vessel Name';
+  document.getElementById('vesselInput').placeholder = isAir ? 'e.g. EK9053' : 'e.g. MAERSK YORKTOWN';
+  document.getElementById('airCustomsSection').style.display = isAir ? 'block' : 'none';
+}
+
+function setAdminPage(page, el) {
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  if (el) el.classList.add('active');
+  currentFilter = '';
+  if (!el || el.getAttribute('onclick') !== 'selectAllShipments(this)') {
+    currentMinistryFilter = '';
+    document.querySelectorAll('.sidebar-subitem').forEach(i => i.classList.remove('active'));
+  }
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(page === 'add' ? 'adminAddPage' : 'adminListPage').classList.add('active');
+  closeDetail();
+  if (page !== 'add') buildAdminTable('');
+}
+
+// ─── LOGIN / LOGOUT ───
+function doLogin(role) {
+  document.getElementById('loginScreen').style.display = 'none';
+  const app = document.getElementById('mainApp');
+  app.style.display = 'flex';
+  document.getElementById('avatarBtn').textContent = role === 'admin' ? 'AD' : 'CL';
+  if (role === 'user') { switchMode('user'); }
+  else { switchMode('admin'); buildAdminTable(''); }
+}
+
+function logout() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('mainApp').style.display = 'none';
+}
+
+// ─── SAVE ANIMATION ───
+function showSaved() {
+  const btn = event.currentTarget;
+  const orig = btn.innerHTML;
+  btn.innerHTML = '<i class="ti ti-check"></i> Saved!';
+  btn.style.background = 'var(--success)';
+  btn.style.borderColor = 'var(--success)';
+  setTimeout(() => {
+    btn.innerHTML = orig;
+    btn.style.background = '';
+    btn.style.borderColor = '';
+    setAdminPage('list', document.querySelector('.sidebar-item'));
+  }, 1600);
+}
+
+// ─── EXPORT CSV ───
+function exportCSV() {
+  const headers = ['Shipment ID','Shipper','HBL','Container','POL','ETD','ETA','Status','Progress'];
+  const rows = shipments.map(s => [s.id,s.shipper,s.hbl,s.container,s.pol,s.etd,s.eta,s.status,s.progress+'%']);
+  const csv = [headers, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv,' + encodeURIComponent(csv);
+  a.download = 'al_qabandi_shipments.csv';
+  a.click();
+}
+
+function printTable() { window.print(); }
+
+// ─── CLOCK ───
+function updateClock() {
+  const now = new Date();
+  const d = now.toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
+  const t = now.toLocaleTimeString('en-US', {hour:'2-digit',minute:'2-digit',hour12:true});
+  const el = document.getElementById('clockDisplay');
+  if (el) el.textContent = `${d} · ${t}`;
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// ─── INIT ───
+buildAdminTable('');
+</script>
+</body>
+</html>
