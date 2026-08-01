@@ -126,6 +126,25 @@ body {
 }
 .sidebar-badge.blue { background: var(--navy-mid); }
 .sidebar-divider { height: 1px; background: var(--border-light); margin: 8px 0; }
+.add-row-btn {
+  display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px;
+  border-radius: 4px; border: none; background: var(--gold); color: #fff; cursor: pointer;
+  vertical-align: middle; margin-left: 4px; padding: 0; font-size: 10px;
+}
+.add-row-btn:hover { background: var(--gold-dark, #a97a1f); }
+.add-row-btn .ti { font-size: 10px; }
+.extra-row-item { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.extra-row-item .form-input { flex: 1; }
+.remove-row-btn {
+  width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border); background: transparent;
+  color: var(--text-3); cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.remove-row-btn:hover { background: var(--danger-bg); color: var(--danger); border-color: #fca5a5; }
+.portal-notice {
+  display: flex; align-items: center; gap: 8px; background: var(--gold-pale); color: var(--gold);
+  border: 1px solid #ecd8a8; border-radius: var(--radius); padding: 10px 14px; font-size: 12.5px;
+  font-weight: 500; margin-bottom: 14px;
+}
 .sidebar-item .submenu-chevron { margin-left: auto; font-size: 14px; transition: transform 0.18s; color: var(--text-3); }
 .sidebar-item .submenu-chevron.rotated { transform: rotate(180deg); }
 .sidebar-submenu {
@@ -242,6 +261,7 @@ tbody tr:hover td { background: #f6f8fc; cursor: pointer; }
 .badge-arrived { background: var(--success-bg); color: var(--success); }
 .badge-pending { background: var(--warn-bg); color: var(--warn); }
 .badge-customs { background: var(--purple-bg); color: var(--purple); }
+.badge-delivered { background: #E3E8F0; color: var(--navy-mid); }
 
 /* ── DETAIL PANEL ── */
 .detail-overlay {
@@ -306,6 +326,18 @@ select.form-input { cursor: pointer; }
 }
 .upload-zone:hover { background: #f5f7fb; border-color: var(--navy-light); color: var(--navy-mid); }
 .upload-zone .ti { font-size: 22px; display: block; margin-bottom: 6px; }
+.upload-zone { display: block; }
+.upload-zone.filled { border-style: solid; border-color: var(--success); background: var(--success-bg); color: var(--success); }
+.upload-zone.filled .ti { color: var(--success); }
+.doc-item-left { display: flex; align-items: center; gap: 8px; overflow: hidden; }
+.doc-item-left span.doc-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; }
+.doc-empty-note { font-size: 12px; color: var(--text-3); padding: 10px 2px; }
+.doc-badge {
+  display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; font-weight: 600;
+  background: var(--gold-pale); color: var(--gold); padding: 2px 8px; border-radius: 20px; margin-left: 8px;
+  cursor: pointer;
+}
+.doc-badge:hover { background: var(--gold); color: #fff; }
 
 /* ── USER PORTAL ── */
 .portal-hero {
@@ -632,6 +664,7 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
 .badge-arrived { border-color: var(--success-border); }
 .badge-pending { border-color: var(--warn-border); }
 .badge-customs { border-color: var(--purple-border); }
+.badge-delivered { border-color: #C3CCDC; }
 
 /* DETAIL PANEL */
 .detail-overlay { box-shadow: -8px 0 30px rgba(0,0,0,0.1); }
@@ -805,26 +838,19 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
       <div class="sidebar">
         <div class="sidebar-label">Shipments</div>
         <div class="sidebar-item active" onclick="selectAllShipments(this)">
-          <i class="ti ti-list"></i> All Shipments <span class="sidebar-badge">14</span>
-          <i class="ti ti-chevron-down submenu-chevron rotated" id="shipmentsChevron"></i>
-        </div>
-        <div class="sidebar-submenu open" id="shipmentsSubmenu">
-          <div class="sidebar-subitem" onclick="filterByMinistry('Ministry of Defence', this)">Ministry of Defence</div>
-          <div class="sidebar-subitem" onclick="filterByMinistry('Ministry of Interior', this)">Ministry of Interior</div>
-          <div class="sidebar-subitem" onclick="filterByMinistry('Ministry of Health', this)">Ministry of Health</div>
-          <div class="sidebar-subitem" onclick="filterByMinistry('Ministry of Foreign Affairs', this)">Ministry of Foreign Affairs</div>
+          <i class="ti ti-list"></i> All Shipments <span class="sidebar-badge" id="badgeAll">14</span>
         </div>
         <div class="sidebar-item" onclick="setAdminPage('add', this)">
           <i class="ti ti-plus"></i> Add Shipment
         </div>
         <div class="sidebar-item" onclick="filterPage('transit', this)">
-          <i class="ti ti-ship"></i> In Transit <span class="sidebar-badge blue">8</span>
+          <i class="ti ti-ship"></i> In Transit <span class="sidebar-badge blue" id="badgeTransit">8</span>
         </div>
         <div class="sidebar-item" onclick="filterPage('arrived', this)">
-          <i class="ti ti-circle-check"></i> Arrived <span class="sidebar-badge" style="background:var(--success);">5</span>
+          <i class="ti ti-circle-check"></i> Arrived <span class="sidebar-badge" id="badgeArrived" style="background:var(--success);">5</span>
         </div>
         <div class="sidebar-item" onclick="filterPage('customs', this)">
-          <i class="ti ti-alert-circle"></i> Customs <span class="sidebar-badge" style="background:var(--purple);">1</span>
+          <i class="ti ti-alert-circle"></i> Customs <span class="sidebar-badge" id="badgeCustoms" style="background:var(--purple);">1</span>
         </div>
         <div class="sidebar-divider"></div>
         <div class="sidebar-label">Documents</div>
@@ -836,7 +862,7 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
         </div>
         <div class="sidebar-divider"></div>
         <div class="sidebar-label">Management</div>
-        <div class="sidebar-item" onclick="setAdminPage('list', this)">
+        <div class="sidebar-item" onclick="setAdminPage('reports', this)">
           <i class="ti ti-chart-bar"></i> Reports
         </div>
         <div class="sidebar-item" onclick="setAdminPage('list', this)">
@@ -869,25 +895,25 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
               <div class="stat-card">
                 <div class="stat-icon navy"><i class="ti ti-package"></i></div>
                 <div class="stat-label">Total Shipments</div>
-                <div class="stat-value">14</div>
+                <div class="stat-value" id="statTotal">14</div>
                 <div class="stat-delta up"><i class="ti ti-trending-up" style="font-size:11px;"></i> +3 this month</div>
               </div>
               <div class="stat-card">
                 <div class="stat-icon blue"><i class="ti ti-ship"></i></div>
                 <div class="stat-label">In Transit</div>
-                <div class="stat-value">8</div>
+                <div class="stat-value" id="statTransit">8</div>
                 <div class="stat-delta neutral">Active now</div>
               </div>
               <div class="stat-card">
                 <div class="stat-icon green"><i class="ti ti-circle-check"></i></div>
                 <div class="stat-label">Arrived</div>
-                <div class="stat-value">5</div>
+                <div class="stat-value" id="statArrived">5</div>
                 <div class="stat-delta up">On schedule</div>
               </div>
               <div class="stat-card">
                 <div class="stat-icon warn"><i class="ti ti-alert-circle"></i></div>
                 <div class="stat-label">Pending Customs</div>
-                <div class="stat-value">1</div>
+                <div class="stat-value" id="statCustoms">1</div>
                 <div class="stat-delta down"><i class="ti ti-alert-triangle" style="font-size:11px;"></i> Needs attention</div>
               </div>
             </div>
@@ -909,6 +935,7 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
                     <option value="arrived">Arrived</option>
                     <option value="customs">Customs</option>
                     <option value="pending">Pending</option>
+                    <option value="delivered">Delivered</option>
                   </select>
                   <button class="btn" onclick="printTable()"><i class="ti ti-printer"></i> Print</button>
                   <button class="btn btn-primary" onclick="exportCSV()"><i class="ti ti-download"></i> Export</button>
@@ -962,7 +989,7 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
                 </div>
                 <div class="form-group">
                   <label class="form-label">Shipment Type</label>
-                  <select class="form-input">
+                  <select class="form-input" id="shipmentTypeSelect">
                     <option>FCL</option>
                     <option>LCL</option>
                     <option>Bulk</option>
@@ -970,27 +997,27 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
                 </div>
                 <div class="form-group">
                   <label class="form-label">Shipment ID</label>
-                  <input class="form-input" placeholder="e.g. SIGN-P00865" value="SIGN-P00865">
+                  <input class="form-input" id="shipmentIdInput" placeholder="e.g. SIGN-P00865" value="SIGN-P00865">
                 </div>
                 <div class="form-group">
                   <label class="form-label">Booking Date</label>
-                  <input class="form-input" type="date">
+                  <input class="form-input" type="date" id="bookingDateInput">
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="hblGroup">
                   <label class="form-label" id="hblLabel">HBL Number</label>
                   <input class="form-input" id="hblInput" placeholder="House Bill of Lading No.">
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="mblGroup">
                   <label class="form-label" id="mblLabel">MBL Number</label>
                   <input class="form-input" id="mblInput" placeholder="Master Bill of Lading No.">
                 </div>
                 <div class="form-group">
                   <label class="form-label">Date of Receipt</label>
-                  <input class="form-input" type="date">
+                  <input class="form-input" type="date" id="receiptDateInput">
                 </div>
                 <div class="form-group">
                   <label class="form-label">Transaction Number</label>
-                  <input class="form-input" placeholder="e.g. TXN-2026-00451">
+                  <input class="form-input" id="transactionNumberInput" placeholder="e.g. TXN-2026-00451">
                 </div>
               </div>
             </div>
@@ -1000,19 +1027,45 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
               <div class="form-grid">
                 <div class="form-group">
                   <label class="form-label">Shipper Name</label>
-                  <input class="form-input" placeholder="Shipper company name">
+                  <input class="form-input" id="shipperNameInput" placeholder="Shipper company name">
                 </div>
                 <div class="form-group">
                   <label class="form-label">Consignee Name</label>
-                  <input class="form-input" placeholder="Consignee company name">
+                  <input class="form-input" id="consigneeNameInput" placeholder="Consignee company name">
                 </div>
                 <div class="form-group full">
                   <label class="form-label">Shipper Address</label>
-                  <input class="form-input" placeholder="Full shipper address">
+                  <input class="form-input" id="shipperAddressInput" placeholder="Full shipper address">
                 </div>
                 <div class="form-group full">
-                  <label class="form-label">Consignee Address (Kuwait)</label>
-                  <input class="form-input" placeholder="Full consignee address in Kuwait">
+                  <label class="form-label">Consignee Address</label>
+                  <input class="form-input" id="consigneeAddressInput" placeholder="Full consignee address">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title"><i class="ti ti-map-pin"></i> Tracking Details</div>
+              <div id="transitPortRows">
+                <div class="form-grid transit-port-row">
+                  <div class="form-group">
+                    <label class="form-label"><span>Transit Port</span> <button type="button" class="add-row-btn" onclick="addTransitPortRow()" title="Add another transit port"><i class="ti ti-plus"></i></button></label>
+                    <input class="form-input transit-port-input" placeholder="e.g. Dubai, UAE">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Date</label>
+                    <input class="form-input transit-port-date" type="date">
+                  </div>
+                </div>
+              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Final Destination</label>
+                  <input class="form-input" id="finalDestinationInput" placeholder="e.g. Shuwaikh Port, Kuwait">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Date</label>
+                  <input class="form-input" type="date" id="finalDestinationDateInput">
                 </div>
               </div>
             </div>
@@ -1030,17 +1083,17 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
                 </div>
                 <div class="form-group">
                   <label class="form-label">ETD (Departure)</label>
-                  <input class="form-input" type="date">
+                  <input class="form-input" type="date" id="etdInput">
                 </div>
                 <div class="form-group">
                   <label class="form-label">ETA (Arrival)</label>
-                  <input class="form-input" type="date">
+                  <input class="form-input" type="date" id="etaInput">
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="shippingLineGroup">
                   <label class="form-label" id="shippingLineLabel">Shipping Line</label>
                   <input class="form-input" id="shippingLineInput" placeholder="e.g. MAERSK">
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="vesselGroup">
                   <label class="form-label" id="vesselLabel">Vessel Name</label>
                   <input class="form-input" id="vesselInput" placeholder="e.g. MAERSK YORKTOWN">
                 </div>
@@ -1050,98 +1103,154 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
             <div class="form-section">
               <div class="form-section-title"><i class="ti ti-box"></i> Cargo Details</div>
               <div class="form-grid">
-                <div class="form-group">
-                  <label class="form-label">Container Number</label>
-                  <input class="form-input" placeholder="e.g. CLHU9076863">
+                <div class="form-group" id="containerNumberGroup">
+                  <label class="form-label" id="containerNumberLabel"><span id="containerNumberLabelText">Container Number</span> <button type="button" class="add-row-btn" onclick="addContainerRow()" title="Add another container number"><i class="ti ti-plus"></i></button></label>
+                  <input class="form-input" id="containerNumberInput" placeholder="e.g. CLHU9076863">
                 </div>
-                <div class="form-group">
-                  <label class="form-label">Container Type</label>
-                  <select class="form-input">
+                <div class="form-group" id="containerTypeGroup">
+                  <label class="form-label" id="containerTypeLabel">Container Type</label>
+                  <select class="form-input" id="containerTypeSelect">
                     <option>20GP</option>
                     <option>40GP</option>
                     <option selected>40HC</option>
                     <option>20RF</option>
                   </select>
                 </div>
+              </div>
+              <div id="extraContainerRows"></div>
+              <div class="form-grid">
                 <div class="form-group">
                   <label class="form-label">Cargo Description</label>
-                  <input class="form-input" placeholder="e.g. Plastic Foods">
+                  <input class="form-input" id="cargoDescInput" placeholder="e.g. Plastic Foods">
                 </div>
                 <div class="form-group">
                   <label class="form-label">Volume</label>
-                  <input class="form-input" placeholder="e.g. 1×40">
+                  <input class="form-input" id="volumeInput" placeholder="e.g. 1×40">
                 </div>
                 <div class="form-group">
                   <label class="form-label">Quantity</label>
-                  <input class="form-input" type="number" placeholder="400">
+                  <input class="form-input" type="number" id="quantityInput" placeholder="400">
                 </div>
                 <div class="form-group">
                   <label class="form-label">Weight (kg)</label>
-                  <input class="form-input" type="number" placeholder="24000">
+                  <input class="form-input" type="number" id="weightInput" placeholder="24000">
                 </div>
                 <div class="form-group">
                   <label class="form-label">Status</label>
-                  <select class="form-input">
+                  <select class="form-input" id="statusSelect">
                     <option value="pending">Pending</option>
                     <option value="transit">In Transit</option>
                     <option value="customs">Customs</option>
                     <option value="arrived">Arrived</option>
+                    <option value="delivered">Delivered</option>
                   </select>
                 </div>
                 <div class="form-group">
                   <label class="form-label">Progress (%)</label>
-                  <input class="form-input" type="number" min="0" max="100" placeholder="0">
+                  <input class="form-input" type="number" min="0" max="100" id="progressInput" placeholder="0">
                 </div>
               </div>
             </div>
 
-            <div class="form-section" id="airCustomsSection" style="display:none;">
+            <div class="form-section" id="customsFinanceSection">
               <div class="form-section-title"><i class="ti ti-receipt-2"></i> Customs Clearance & Financial Details</div>
               <div class="form-grid">
                 <div class="form-group">
                   <label class="form-label">Foreign Contract Invoice Number</label>
-                  <input class="form-input" placeholder="e.g. FCI-2026-0142">
+                  <input class="form-input" id="fciInput" placeholder="e.g. FCI-2026-0142">
                 </div>
                 <div class="form-group">
                   <label class="form-label">Invoice Amount</label>
-                  <input class="form-input" type="number" placeholder="e.g. 4500">
+                  <input class="form-input" type="number" id="invoiceAmountInput" placeholder="e.g. 4500">
                 </div>
                 <div class="form-group">
                   <label class="form-label">Customs Declaration Number</label>
-                  <input class="form-input" placeholder="e.g. CD-2026-0891">
+                  <input class="form-input" id="customsDeclNoInput" placeholder="e.g. CD-2026-0891">
                 </div>
                 <div class="form-group">
                   <label class="form-label">Customs Declaration Date</label>
-                  <input class="form-input" type="date">
+                  <input class="form-input" type="date" id="customsDeclDateInput">
                 </div>
                 <div class="form-group">
                   <label class="form-label">Amount of Paid Customs Duty</label>
-                  <input class="form-input" type="number" placeholder="e.g. 225">
+                  <input class="form-input" type="number" id="customsDutyInput" placeholder="e.g. 225">
                 </div>
                 <div class="form-group">
                   <label class="form-label">Bank Receipt Number</label>
-                  <input class="form-input" placeholder="e.g. BR-2026-3390">
+                  <input class="form-input" id="bankReceiptNoInput" placeholder="e.g. BR-2026-3390">
                 </div>
                 <div class="form-group">
                   <label class="form-label">Bank Receipt Date</label>
-                  <input class="form-input" type="date">
+                  <input class="form-input" type="date" id="bankReceiptDateInput">
                 </div>
               </div>
             </div>
 
             <div class="form-section">
               <div class="form-section-title"><i class="ti ti-file"></i> Documents Upload</div>
-              <div class="upload-grid">
-                <div class="upload-zone"><i class="ti ti-file-invoice"></i>House Bill (Draft)<br><small>Click to upload</small></div>
-                <div class="upload-zone"><i class="ti ti-receipt"></i>Commercial Invoice<br><small>Click to upload</small></div>
-                <div class="upload-zone"><i class="ti ti-certificate"></i>Certificate of Origin<br><small>Click to upload</small></div>
-                <div class="upload-zone"><i class="ti ti-clipboard-list"></i>Packing List<br><small>Click to upload</small></div>
+              <div class="upload-grid" id="uploadGrid">
+                <!-- populated dynamically by renderUploadZones() based on Transport Mode -->
               </div>
             </div>
 
             <div class="form-actions">
               <button class="btn" onclick="setAdminPage('list', null)">Cancel</button>
               <button class="btn btn-primary" onclick="openMinistryModal()"><i class="ti ti-device-floppy"></i> Save Shipment</button>
+            </div>
+          </div>
+
+          <!-- REPORTS PAGE -->
+          <div class="page" id="adminReportsPage">
+            <div class="page-header">
+              <div>
+                <div class="page-title">Reports</div>
+                <div class="page-sub">Shipment activity by month</div>
+              </div>
+            </div>
+
+            <div class="form-section" style="display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;">
+              <div class="form-group" style="min-width:220px;margin:0;">
+                <label class="form-label">Month</label>
+                <select class="form-input" id="reportMonthSelect" onchange="buildReports()">
+                  <option value="all">All Months</option>
+                </select>
+              </div>
+              <div class="form-group" style="min-width:220px;margin:0;">
+                <label class="form-label">Ministry</label>
+                <select class="form-input" id="reportMinistrySelect" onchange="buildReports()">
+                  <option value="all">All Ministries</option>
+                  <option value="Ministry of Defence">Ministry of Defence</option>
+                  <option value="Ministry of Interior">Ministry of Interior</option>
+                  <option value="Ministry of Health">Ministry of Health</option>
+                  <option value="Ministry of Foreign Affairs">Ministry of Foreign Affairs</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="stats-row" id="reportStatsRow"></div>
+
+            <div class="card" style="margin-top:16px;">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">Shipments in Selected Period</div>
+                  <div class="card-sub" id="reportPeriodLabel">All months</div>
+                </div>
+              </div>
+              <div style="overflow-x:auto;">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Shipment ID</th>
+                      <th>Shipper Name</th>
+                      <th>Ministry</th>
+                      <th>ETD</th>
+                      <th>ETA</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="reportTableBody"></tbody>
+                </table>
+              </div>
             </div>
           </div>
 
@@ -1186,27 +1295,8 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
 
             <div class="detail-section">
               <div class="detail-section-label">Documents</div>
-              <div class="doc-list">
-                <div class="doc-item">
-                  <div class="doc-item-left"><i class="ti ti-file-invoice" style="color:var(--info);"></i> House Bill (Draft)</div>
-                  <button class="action-btn"><i class="ti ti-download"></i></button>
-                </div>
-                <div class="doc-item">
-                  <div class="doc-item-left"><i class="ti ti-receipt" style="color:var(--success);"></i> Commercial Invoice</div>
-                  <button class="action-btn"><i class="ti ti-download"></i></button>
-                </div>
-                <div class="doc-item">
-                  <div class="doc-item-left"><i class="ti ti-certificate" style="color:var(--warn);"></i> Certificate of Origin</div>
-                  <button class="action-btn"><i class="ti ti-download"></i></button>
-                </div>
-                <div class="doc-item">
-                  <div class="doc-item-left"><i class="ti ti-clipboard-list" style="color:var(--text-3);"></i> Packing List</div>
-                  <button class="action-btn"><i class="ti ti-download"></i></button>
-                </div>
-                <div class="doc-item">
-                  <div class="doc-item-left"><i class="ti ti-certificate-2" style="color:var(--danger);"></i> TIR Certificate</div>
-                  <button class="action-btn"><i class="ti ti-download"></i></button>
-                </div>
+              <div class="doc-list" id="detailDocList">
+                <!-- populated by JS -->
               </div>
             </div>
 
@@ -1223,9 +1313,14 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
           <div class="portal-title">Track Your Shipment</div>
           <div class="portal-sub">Al Qabandi & Partners Co. W.L.L. · Shuaiba, Kuwait</div>
           <div class="portal-search">
-            <input id="portalSearch" placeholder="Enter Shipment ID, HBL number or Container number…" oninput="filterUserList(this.value)">
+            <input id="portalSearch" placeholder="Search by Master BL, Shipper Name, or Container Number…" oninput="filterUserList(this.value)">
             <button class="btn btn-gold" style="padding:10px 16px;"><i class="ti ti-search"></i> Track</button>
           </div>
+        </div>
+
+        <div class="portal-notice">
+          <i class="ti ti-info-circle"></i>
+          This tracking portal is currently available for the Ministry of Health. Access for other ministries will be enabled at a later stage.
         </div>
 
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
@@ -1248,52 +1343,69 @@ tbody tr:hover td { background: rgba(15,45,74,0.03); }
       </div>
     </div>
 
-    <!-- ═══ MILESTONE MODAL ═══ -->
-    <div class="milestone-overlay" id="milestoneOverlay" onclick="if(event.target===this) closeMilestone()">
-      <div class="milestone-modal">
+    <!-- ═══ CLIENT SHIPMENT DETAIL MODAL ═══ -->
+    <div class="milestone-overlay" id="clientDetailOverlay" onclick="if(event.target===this) closeClientDetail()">
+      <div class="milestone-modal" style="width:480px;max-height:88vh;">
         <div class="milestone-modal-head">
           <div>
-            <div class="milestone-kicker">Tracking Milestone</div>
-            <div class="milestone-title" id="msTitle">Booking Confirmed</div>
-            <span class="milestone-status-badge" id="msStatusBadge">Completed</span>
+            <div class="milestone-kicker">Shipment Tracking</div>
+            <div class="milestone-title" id="cdId" style="font-size:19px;">SIGN-P00851</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.65);margin-top:2px;" id="cdShipper">Fujian Yiboyou</div>
+            <div id="cdBadge" style="margin-top:8px;"></div>
           </div>
-          <button class="milestone-close-x" onclick="closeMilestone()"><i class="ti ti-x"></i></button>
+          <button class="milestone-close-x" onclick="closeClientDetail()"><i class="ti ti-x"></i></button>
         </div>
         <div class="milestone-modal-body">
-          <div class="milestone-info-row">
-            <div class="milestone-info-icon"><i class="ti ti-map-pin"></i></div>
-            <div>
-              <div class="milestone-info-label">Location</div>
-              <div class="milestone-info-value" id="msLocation">—</div>
+          <div class="detail-section" style="margin-bottom:18px;">
+            <div class="milestone-details-label">Journey Progress</div>
+            <div class="progress-track" style="height:6px;margin:8px 0 6px;">
+              <div class="progress-fill" id="cdProgressBar" style="width:60%;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--text-3);">
+              <span id="cdPol">Xiamen, China</span>
+              <span id="cdPct" style="font-weight:600;color:var(--navy-mid);">60%</span>
+              <span id="cdPod">Shuaiba, Kuwait</span>
             </div>
           </div>
-          <div class="milestone-info-row">
-            <div class="milestone-info-icon"><i class="ti ti-calendar"></i></div>
-            <div>
-              <div class="milestone-info-label">Date</div>
-              <div class="milestone-info-value" id="msDate">—</div>
-            </div>
+
+          <div class="detail-section" style="margin-bottom:18px;">
+            <div class="milestone-details-label" style="margin-bottom:10px;">Status Timeline</div>
+            <div class="timeline" id="cdTimeline"></div>
           </div>
-          <div class="milestone-info-row">
-            <div class="milestone-info-icon"><i class="ti ti-anchor"></i></div>
-            <div>
-              <div class="milestone-info-label">Vessel / Carrier</div>
-              <div class="milestone-info-value" id="msVessel">—</div>
-            </div>
+
+          <div class="detail-section" style="margin-bottom:18px;">
+            <div class="milestone-details-label" style="margin-bottom:8px;">Shipment Details</div>
+            <div id="cdRows"></div>
           </div>
-          <div class="milestone-info-row">
-            <div class="milestone-info-icon"><i class="ti ti-package"></i></div>
-            <div>
-              <div class="milestone-info-label">Shipment</div>
-              <div class="milestone-info-value" id="msShipment">—</div>
-            </div>
+
+          <div class="detail-section">
+            <div class="milestone-details-label" style="margin-bottom:8px;">Documents</div>
+            <div class="doc-list" id="cdDocList"></div>
           </div>
-          <div class="milestone-divider"></div>
-          <div class="milestone-details-label">Details</div>
-          <div class="milestone-details-text" id="msDetails">—</div>
         </div>
         <div class="milestone-modal-foot">
-          <button class="btn" onclick="closeMilestone()">Close</button>
+          <button class="btn" onclick="closeClientDetail()">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SHIPMENT DOCUMENTS MODAL (Client Portal) ═══ -->
+    <div class="milestone-overlay" id="docsOverlay" onclick="if(event.target===this) closeDocsModal()">
+      <div class="milestone-modal" style="width:420px;">
+        <div class="milestone-modal-head">
+          <div>
+            <div class="milestone-kicker">Shipment Documents</div>
+            <div class="milestone-title" style="font-size:18px;" id="docsShipmentId">SIGN-P00851</div>
+          </div>
+          <button class="milestone-close-x" onclick="closeDocsModal()"><i class="ti ti-x"></i></button>
+        </div>
+        <div class="milestone-modal-body">
+          <div class="doc-list" id="clientDocList">
+            <!-- populated by JS -->
+          </div>
+        </div>
+        <div class="milestone-modal-foot">
+          <button class="btn" onclick="closeDocsModal()">Close</button>
         </div>
       </div>
     </div>
@@ -1384,6 +1496,7 @@ function badgeHTML(status) {
     arrived: ['badge-arrived','Arrived'],
     customs: ['badge-customs','In Customs'],
     pending: ['badge-pending','Pending'],
+    delivered: ['badge-delivered','Delivered'],
   };
   const [cls, label] = map[status] || ['badge-pending','Unknown'];
   return `<span class="badge ${cls}"><span class="badge-dot"></span>${label}</span>`;
@@ -1415,7 +1528,7 @@ function buildAdminTable(filter) {
   document.getElementById('adminTableBody').innerHTML = list.map(s => `
     <tr onclick="openDetail('${s.id}')">
       <td><span class="shipment-id">${displayId(s)}</span></td>
-      <td>${s.shipper}</td>
+      <td>${s.shipper}${s.documents && s.documents.length ? `<span class="doc-badge" onclick="event.stopPropagation();openDetail('${s.id}')" title="View documents"><i class="ti ti-paperclip"></i> ${s.documents.length}</span>` : ''}</td>
       <td><span class="cell-secondary">${s.ministry || '—'}</span></td>
       <td><span class="cell-secondary">${s.hbl}</span></td>
       <td><span class="cell-secondary">${s.container} · ${s.ctype}</span></td>
@@ -1464,8 +1577,8 @@ function selectAllShipments(el) {
 
   const submenu = document.getElementById('shipmentsSubmenu');
   const chevron = document.getElementById('shipmentsChevron');
-  submenu.classList.add('open');
-  chevron.classList.add('rotated');
+  if (submenu) submenu.classList.add('open');
+  if (chevron) chevron.classList.add('rotated');
 }
 
 function filterByMinistry(ministry, el) {
@@ -1502,9 +1615,9 @@ function openDetail(id) {
     {title:'Booking Confirmed', meta:`${s.etd} · ${s.pol}`, done:true},
     {title:'Cargo Loaded', meta:`${s.etd} · Port`, done:s.progress>=20},
     {title:'Vessel Departed', meta:`${s.etd} · ${s.line}`, active:s.status==='transit'&&s.progress<80, done:s.progress>=40},
-    {title:'Arriving at Shuaiba', meta:`ETA: ${s.eta}`, done:s.status==='arrived'||s.status==='customs', active:s.status==='transit'&&s.progress>=70},
-    {title:'Customs Clearance', meta:s.status==='customs'?'In progress':s.status==='arrived'?'Cleared':'Pending', done:s.status==='arrived', active:s.status==='customs'},
-    {title:'Delivered', meta:s.status==='arrived'?'Completed':'Pending', done:s.status==='arrived'},
+    {title:'Arriving at Shuaiba', meta:`ETA: ${s.eta}`, done:['arrived','customs','delivered'].includes(s.status), active:s.status==='transit'&&s.progress>=70},
+    {title:'Customs Clearance', meta:s.status==='customs'?'In progress':(s.status==='arrived'||s.status==='delivered')?'Cleared':'Pending', done:s.status==='arrived'||s.status==='delivered', active:s.status==='customs'},
+    {title:'Delivered', meta:s.status==='delivered'?'Completed':'Pending', done:s.status==='delivered'},
   ];
   document.getElementById('detailTimeline').innerHTML = steps.map((step, i) => `
     <div class="timeline-item">
@@ -1519,119 +1632,118 @@ function openDetail(id) {
     </div>`).join('');
 
   // Detail rows
+  const transitPortsText = (s.transitPorts && s.transitPorts.length)
+    ? s.transitPorts.map(t => `${t.port}${t.date ? ' (' + t.date + ')' : ''}`).join(', ')
+    : '—';
+  const extraContainersText = (s.extraContainers && s.extraContainers.length) ? s.extraContainers.join(', ') : '';
   document.getElementById('detailRows').innerHTML = [
     ['HBL No.', s.hbl], ['MBL No.', s.mbl], ['Origin', s.pol], ['Destination', s.pod],
+    ['Transit Port(s)', transitPortsText], ['Final Destination', s.finalDestination ? `${s.finalDestination}${s.finalDestinationDate ? ' — ' + s.finalDestinationDate : ''}` : '—'],
     ['ETD', s.etd], ['ETA', s.eta], ['Shipping Line', s.line], ['Vessel', s.vessel],
-    ['Container', `${s.container} · ${s.ctype}`], ['Cargo', s.cargo], ['Volume', s.volume],
+    ['Container', `${s.container} · ${s.ctype}`], ...(extraContainersText ? [['Additional Containers', extraContainersText]] : []),
+    ['Cargo', s.cargo], ['Volume', s.volume],
     ['Quantity', s.qty], ['Weight', s.weight],
+    ['Foreign Contract Invoice No.', s.foreignContractInvoiceNo || '—'], ['Invoice Amount', s.invoiceAmount || '—'],
+    ['Customs Declaration No.', s.customsDeclarationNo || '—'], ['Customs Declaration Date', s.customsDeclarationDate || '—'],
+    ['Customs Duty Paid', s.customsDutyPaid || '—'], ['Bank Receipt No.', s.bankReceiptNo || '—'], ['Bank Receipt Date', s.bankReceiptDate || '—'],
   ].map(([lbl, val]) => `<div class="detail-row"><label>${lbl}</label><span>${val}</span></div>`).join('');
+
+  renderDocList('detailDocList', s);
 }
 function closeDetail() { document.getElementById('adminDetail').classList.remove('open'); }
 
 // ─── BUILD USER LIST ───
 let userStatusFilter = 'all';
-// ─── TRACKING MILESTONE MODAL (Client Portal) ───
-function getMilestones(s) {
-  const originCity = s.pol.split(',')[0];
-  return [
-    {
-      title: 'Booking Confirmed',
-      location: s.pol,
-      date: s.etd,
-      vessel: `${s.vessel} · ${s.line}`,
-      details: `Booking confirmed with ${s.line}. Container ${s.container} (${s.ctype}) reserved for "${s.cargo}".`,
-      done: true,
-    },
-    {
-      title: 'Cargo Loaded',
-      location: `${originCity} Port`,
-      date: s.etd,
-      vessel: `${s.vessel} · ${s.line}`,
-      details: `Cargo loaded into container at ${s.pol}. Weight ${s.weight}, volume ${s.volume}.`,
-      done: s.progress >= 20,
-    },
-    {
-      title: 'Vessel Departed',
-      location: s.pol,
-      date: s.etd,
-      vessel: `${s.vessel} · ${s.line}`,
-      details: `Vessel ${s.vessel} departed ${s.pol}, en route to ${s.pod}.`,
-      done: s.progress >= 40,
-      active: s.status === 'transit' && s.progress < 80,
-    },
-    {
-      title: 'Arriving at Shuaiba',
-      location: s.pod,
-      date: s.eta,
-      vessel: `${s.vessel} · ${s.line}`,
-      details: `Vessel is approaching ${s.pod}. Estimated arrival ${s.eta}.`,
-      done: s.status === 'arrived' || s.status === 'customs',
-      active: s.status === 'transit' && s.progress >= 70,
-    },
-    {
-      title: 'Customs Clearance',
-      location: s.pod,
-      date: s.eta,
-      vessel: `${s.vessel} · ${s.line}`,
-      details: s.status === 'customs'
-        ? `Shipment is undergoing customs clearance at ${s.pod}.`
-        : (s.status === 'arrived' ? `Customs clearance completed at ${s.pod}.` : `Customs clearance pending.`),
-      done: s.status === 'arrived',
-      active: s.status === 'customs',
-    },
-    {
-      title: 'Delivered',
-      location: s.pod,
-      date: s.eta,
-      vessel: `${s.vessel} · ${s.line}`,
-      details: s.status === 'arrived' ? `Shipment delivered and cleared at ${s.pod}.` : `Delivery pending.`,
-      done: s.status === 'arrived',
-    },
-  ];
-}
 
-function openMilestone(id) {
+// ─── CLIENT SHIPMENT DETAIL MODAL (mirrors Admin detail panel, read-only) ───
+function openClientDetail(id) {
   const s = shipments.find(x => x.id === id);
   if (!s) return;
-  const steps = getMilestones(s);
-  // Pick the most advanced milestone: last "done" step, or the "active" step, falling back to the first step.
-  let current = steps[0];
-  for (const step of steps) {
-    if (step.done) current = step;
-  }
-  const activeStep = steps.find(step => step.active);
-  if (activeStep) current = activeStep;
 
-  document.getElementById('msTitle').textContent = current.title;
-  const badge = document.getElementById('msStatusBadge');
-  badge.textContent = current.done ? 'Completed' : (current.active ? 'In Progress' : 'Pending');
-  badge.className = 'milestone-status-badge ' + (current.done ? 'completed' : (current.active ? 'active' : ''));
-  document.getElementById('msLocation').textContent = current.location;
-  document.getElementById('msDate').textContent = current.date;
-  document.getElementById('msVessel').textContent = current.vessel;
-  document.getElementById('msShipment').textContent = `${s.id} · ${s.container}`;
-  document.getElementById('msDetails').textContent = current.details;
+  document.getElementById('cdId').textContent = displayId(s);
+  document.getElementById('cdShipper').textContent = s.shipper;
+  document.getElementById('cdBadge').innerHTML = badgeHTML(s.status);
+  document.getElementById('cdProgressBar').style.width = s.progress + '%';
+  document.getElementById('cdPol').textContent = s.pol;
+  document.getElementById('cdPct').textContent = s.progress + '%';
+  document.getElementById('cdPod').textContent = s.pod;
 
-  document.getElementById('milestoneOverlay').classList.add('open');
+  const steps = [
+    {title:'Booking Confirmed', meta:`${s.etd} · ${s.pol}`, done:true},
+    {title:'Cargo Loaded', meta:`${s.etd} · Port`, done:s.progress>=20},
+    {title:'Vessel Departed', meta:`${s.etd} · ${s.line}`, active:s.status==='transit'&&s.progress<80, done:s.progress>=40},
+    {title:'Arriving at Shuaiba', meta:`ETA: ${s.eta}`, done:['arrived','customs','delivered'].includes(s.status), active:s.status==='transit'&&s.progress>=70},
+    {title:'Customs Clearance', meta:s.status==='customs'?'In progress':(s.status==='arrived'||s.status==='delivered')?'Cleared':'Pending', done:s.status==='arrived'||s.status==='delivered', active:s.status==='customs'},
+    {title:'Delivered', meta:s.status==='delivered'?'Completed':'Pending', done:s.status==='delivered'},
+  ];
+  document.getElementById('cdTimeline').innerHTML = steps.map((step, i) => `
+    <div class="timeline-item">
+      <div class="tl-line">
+        <div class="tl-dot ${step.done?'done':step.active?'active':'pending'}"></div>
+        ${i < steps.length - 1 ? '<div class="tl-connector"></div>' : ''}
+      </div>
+      <div class="tl-content">
+        <div class="tl-title" style="color:${step.done?'var(--success)':step.active?'var(--gold)':'var(--text-3)'}">${step.title}</div>
+        <div class="tl-meta">${step.meta}</div>
+      </div>
+    </div>`).join('');
+
+  const cdTransitPortsText = (s.transitPorts && s.transitPorts.length)
+    ? s.transitPorts.map(t => `${t.port}${t.date ? ' (' + t.date + ')' : ''}`).join(', ')
+    : '—';
+  const cdExtraContainersText = (s.extraContainers && s.extraContainers.length) ? s.extraContainers.join(', ') : '';
+  document.getElementById('cdRows').innerHTML = [
+    ['HBL No.', s.hbl], ['MBL No.', s.mbl], ['Origin', s.pol], ['Destination', s.pod],
+    ['Transit Port(s)', cdTransitPortsText], ['Final Destination', s.finalDestination ? `${s.finalDestination}${s.finalDestinationDate ? ' — ' + s.finalDestinationDate : ''}` : '—'],
+    ['ETD', s.etd], ['ETA', s.eta], ['Shipping Line', s.line], ['Vessel', s.vessel],
+    ['Container', `${s.container} · ${s.ctype}`], ...(cdExtraContainersText ? [['Additional Containers', cdExtraContainersText]] : []),
+    ['Cargo', s.cargo], ['Volume', s.volume],
+    ['Quantity', s.qty], ['Weight', s.weight],
+    ['Foreign Contract Invoice No.', s.foreignContractInvoiceNo || '—'], ['Invoice Amount', s.invoiceAmount || '—'],
+    ['Customs Declaration No.', s.customsDeclarationNo || '—'], ['Customs Declaration Date', s.customsDeclarationDate || '—'],
+    ['Customs Duty Paid', s.customsDutyPaid || '—'], ['Bank Receipt No.', s.bankReceiptNo || '—'], ['Bank Receipt Date', s.bankReceiptDate || '—'],
+  ].map(([lbl, val]) => `<div class="detail-row"><label>${lbl}</label><span>${val}</span></div>`).join('');
+
+  renderDocList('cdDocList', s);
+
+  document.getElementById('clientDetailOverlay').classList.add('open');
 }
-function closeMilestone() {
-  document.getElementById('milestoneOverlay').classList.remove('open');
+function closeClientDetail() {
+  document.getElementById('clientDetailOverlay').classList.remove('open');
 }
 
 function buildUserList(search='') {
   const sl = search.toLowerCase();
-  const list = shipments.filter(s => {
-    if (userStatusFilter !== 'all' && s.status !== userStatusFilter) return false;
-    if (sl) return [s.id, s.hbl, s.container, s.shipper].some(v => v.toLowerCase().includes(sl));
-    return true;
-  });
+  // Client Portal is currently enabled for Ministry of Health only; other ministries will be enabled later.
+  let list = shipments.filter(s => s.ministry === 'Ministry of Health');
+
+  if (userStatusFilter !== 'all') list = list.filter(s => s.status === userStatusFilter);
+
+  if (sl) {
+    // Search priority: 1) Master BL  2) Shipper Name  3) Container Number
+    list = list
+      .map(s => {
+        let rank = -1;
+        if ((s.mbl || '').toLowerCase().includes(sl)) rank = 0;
+        else if ((s.shipper || '').toLowerCase().includes(sl)) rank = 1;
+        else if ((s.container || '').toLowerCase().includes(sl)) rank = 2;
+        else if ((s.id || '').toLowerCase().includes(sl) || (s.hbl || '').toLowerCase().includes(sl)) rank = 3;
+        return { s, rank };
+      })
+      .filter(x => x.rank !== -1)
+      .sort((a, b) => a.rank - b.rank)
+      .map(x => x.s);
+  }
+
   document.getElementById('shipCount').textContent = `${list.length} shipment${list.length !== 1 ? 's' : ''}`;
   document.getElementById('userShipmentList').innerHTML = list.map(s => `
-    <div class="shipment-card" onclick="openMilestone('${s.id}')">
+    <div class="shipment-card" onclick="openClientDetail('${s.id}')">
       <div class="sc-top">
         <div>
           <div class="sc-id">${s.id}</div>
-          <div class="sc-shipper">${s.shipper}</div>
+          <div class="sc-shipper">${s.shipper}
+            <span class="doc-badge" onclick="event.stopPropagation();openDocsModal('${s.id}')"><i class="ti ti-paperclip"></i> Documents${s.documents && s.documents.length ? ' · ' + s.documents.length : ''}</span>
+          </div>
           <div class="sc-hbl">${s.hbl}</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
@@ -1677,8 +1789,62 @@ function switchMode(mode) {
 
 // ─── PAGES ───
 // ─── TRANSPORT MODE FIELD SWAP ───
+// ─── DOCUMENT TYPE CONFIG (per transport mode) ───
+const DOC_TYPES_ALL = [
+  { key: 'houseBL', label: 'House BL', icon: 'ti-file-invoice' },
+  { key: 'masterBL', label: 'Master BL', icon: 'ti-files' },
+  { key: 'certOrigin', label: 'Certificate of Origin', icon: 'ti-certificate' },
+  { key: 'commercialInvoice', label: 'Commercial Invoice', icon: 'ti-receipt' },
+  { key: 'packingList', label: 'Packing List', icon: 'ti-clipboard-list' },
+  { key: 'finalInvoice', label: 'Final Invoice', icon: 'ti-file-dollar' },
+  { key: 'proofDelivery', label: 'Proof of Delivery', icon: 'ti-truck-delivery' },
+  { key: 'otherDocs', label: 'Other Documents', icon: 'ti-folder' },
+];
+const DOC_TYPES_ROAD = DOC_TYPES_ALL.filter(d => d.key !== 'houseBL' && d.key !== 'masterBL');
+
+function renderUploadZones(mode) {
+  const types = mode === 'Road Freight' ? DOC_TYPES_ROAD : DOC_TYPES_ALL;
+  const grid = document.getElementById('uploadGrid');
+  if (!grid) return;
+  grid.innerHTML = types.map(t => `
+    <label class="upload-zone" id="zone_${t.key}">
+      <i class="ti ${t.icon}"></i>${t.label}<br><small id="name_${t.key}">Click to upload</small>
+      <input type="file" style="display:none" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" onchange="handleFileSelect(this,'${t.key}','${t.label}','${t.icon}')">
+    </label>`).join('');
+}
+
+const CONTAINER_TYPE_OPTIONS = ['20GP', '40GP', '40HC', '20RF'];
+const TRAILER_TYPE_OPTIONS = ['Flatbed', 'Curtain-side', 'Refrigerated', 'Lowbed', 'Box Trailer'];
+function setSelectOptions(selectEl, options) {
+  selectEl.innerHTML = options.map(o => `<option>${o}</option>`).join('');
+}
+
+// ─── TRANSIT PORT / CONTAINER DYNAMIC ROWS ───
+function addTransitPortRow() {
+  const wrap = document.getElementById('transitPortRows');
+  const row = document.createElement('div');
+  row.className = 'extra-row-item';
+  row.innerHTML = `
+    <input class="form-input transit-port-input" placeholder="e.g. Dubai, UAE">
+    <input class="form-input transit-port-date" type="date" style="max-width:170px;">
+    <button type="button" class="remove-row-btn" onclick="this.parentElement.remove()"><i class="ti ti-trash"></i></button>`;
+  wrap.appendChild(row);
+}
+function addContainerRow() {
+  const wrap = document.getElementById('extraContainerRows');
+  const row = document.createElement('div');
+  row.className = 'extra-row-item';
+  row.innerHTML = `
+    <input class="form-input extra-container-input" placeholder="Additional container number">
+    <button type="button" class="remove-row-btn" onclick="this.parentElement.remove()"><i class="ti ti-trash"></i></button>`;
+  wrap.appendChild(row);
+}
+
+// ─── TRANSPORT MODE FIELD SWAP ───
 function handleTransportMode(mode) {
   const isAir = mode === 'Air Freight';
+  const isRoad = mode === 'Road Freight';
+
   document.getElementById('hblLabel').textContent = isAir ? 'HAWB Number' : 'HBL Number';
   document.getElementById('hblInput').placeholder = isAir ? 'House Air Waybill No.' : 'House Bill of Lading No.';
   document.getElementById('mblLabel').textContent = isAir ? 'MAWB Number' : 'MBL Number';
@@ -1690,7 +1856,33 @@ function handleTransportMode(mode) {
   document.getElementById('shippingLineInput').placeholder = isAir ? 'e.g. EMIRATES SKYCARGO' : 'e.g. MAERSK';
   document.getElementById('vesselLabel').textContent = isAir ? 'Flight Number' : 'Vessel Name';
   document.getElementById('vesselInput').placeholder = isAir ? 'e.g. EK9053' : 'e.g. MAERSK YORKTOWN';
-  document.getElementById('airCustomsSection').style.display = isAir ? 'block' : 'none';
+
+  // Road Freight: no HBL/MBL, no Shipping Line/Vessel Name
+  document.getElementById('hblGroup').style.display = isRoad ? 'none' : '';
+  document.getElementById('mblGroup').style.display = isRoad ? 'none' : '';
+  document.getElementById('shippingLineGroup').style.display = isRoad ? 'none' : '';
+  document.getElementById('vesselGroup').style.display = isRoad ? 'none' : '';
+
+  // Air Freight: no container fields at all. Road Freight: relabel to Vehicle/Trailer.
+  const cnGroup = document.getElementById('containerNumberGroup');
+  const ctGroup = document.getElementById('containerTypeGroup');
+  const extraRows = document.getElementById('extraContainerRows');
+  if (isAir) {
+    cnGroup.style.display = 'none';
+    ctGroup.style.display = 'none';
+    extraRows.style.display = 'none';
+  } else {
+    cnGroup.style.display = '';
+    ctGroup.style.display = '';
+    extraRows.style.display = '';
+    document.getElementById('containerNumberLabelText').textContent = isRoad ? 'Vehicle Number' : 'Container Number';
+    document.getElementById('containerNumberInput').placeholder = isRoad ? 'e.g. KWT 12345' : 'e.g. CLHU9076863';
+    document.getElementById('containerTypeLabel').textContent = isRoad ? 'Trailer Type' : 'Container Type';
+    setSelectOptions(document.getElementById('containerTypeSelect'), isRoad ? TRAILER_TYPE_OPTIONS : CONTAINER_TYPE_OPTIONS);
+  }
+
+  // Customs Clearance & Financial Details now shown for all transport modes (no toggle needed).
+  renderUploadZones(mode);
 }
 
 function setAdminPage(page, el) {
@@ -1702,9 +1894,11 @@ function setAdminPage(page, el) {
     document.querySelectorAll('.sidebar-subitem').forEach(i => i.classList.remove('active'));
   }
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById(page === 'add' ? 'adminAddPage' : 'adminListPage').classList.add('active');
+  const pageId = page === 'add' ? 'adminAddPage' : page === 'reports' ? 'adminReportsPage' : 'adminListPage';
+  document.getElementById(pageId).classList.add('active');
   closeDetail();
-  if (page !== 'add') buildAdminTable('');
+  if (page === 'list') buildAdminTable('');
+  if (page === 'reports') buildReports();
 }
 
 // ─── LOGIN / LOGOUT ───
@@ -1744,12 +1938,260 @@ function confirmMinistrySave() {
     document.getElementById('ministryWarning').classList.add('show');
     return;
   }
+  const ministry = selectedMinistry;
   closeMinistryModal();
-  showSaved(selectedMinistry);
+  saveNewShipment(ministry);
 }
 
-// ─── SAVE ANIMATION ───
-function showSaved(ministry) {
+// ─── FORM → SHIPMENT OBJECT ───
+function val(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function fmtDate(iso) {
+  if (!iso) return '';
+  const [y, m, d] = iso.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+// ─── DOCUMENT UPLOADS (Add Shipment form) ───
+let pendingUploads = {};
+function formatBytes(bytes) {
+  if (!bytes) return '';
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+function getFileIcon(filename) {
+  const ext = (filename.split('.').pop() || '').toLowerCase();
+  if (ext === 'pdf') return 'ti-file-type-pdf';
+  if (ext === 'doc' || ext === 'docx') return 'ti-file-type-doc';
+  if (['jpg', 'jpeg', 'png'].includes(ext)) return 'ti-photo';
+  return null;
+}
+function handleFileSelect(input, key, label, icon) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  pendingUploads[key] = { label, icon: getFileIcon(file.name) || icon, name: file.name, size: file.size, url };
+
+  const zone = document.getElementById('zone_' + key);
+  const nameEl = document.getElementById('name_' + key);
+  if (zone) zone.classList.add('filled');
+  if (nameEl) nameEl.textContent = `${file.name} (${formatBytes(file.size)})`;
+}
+
+function renderDocList(containerId, s) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const docs = s.documents || [];
+  if (!docs.length) {
+    container.innerHTML = `<div class="doc-empty-note"><i class="ti ti-file-off"></i> No documents uploaded for this shipment yet.</div>`;
+    return;
+  }
+  container.innerHTML = docs.map((d, i) => `
+    <div class="doc-item">
+      <div class="doc-item-left"><i class="ti ${d.icon || 'ti-file'}" style="color:var(--info);"></i> <span class="doc-name" title="${d.name}">${d.label}${d.name ? ' — ' + d.name : ''}</span></div>
+      <a class="action-btn" title="Download" href="${d.url}" download="${d.name || (d.label || 'document')}" target="_blank" rel="noopener"><i class="ti ti-download"></i></a>
+    </div>`).join('');
+}
+
+// ─── CLIENT PORTAL: VIEW SHIPMENT DOCUMENTS ───
+function openDocsModal(id) {
+  const s = shipments.find(x => x.id === id);
+  if (!s) return;
+  document.getElementById('docsShipmentId').textContent = s.id;
+  renderDocList('clientDocList', s);
+  document.getElementById('docsOverlay').classList.add('open');
+}
+function closeDocsModal() {
+  document.getElementById('docsOverlay').classList.remove('open');
+}
+
+function collectShipmentFromForm(ministry) {
+  const isRoad = val('transportModeSelect') === 'Road Freight';
+  const shipmentId = val('shipmentIdInput') || `SIGN-P${String(shipments.length + 851).padStart(5, '0')}`;
+  const documents = Object.values(pendingUploads).map(d => ({
+    label: d.label, name: d.name, size: d.size, url: d.url, icon: d.icon,
+  }));
+
+  const transitPorts = [];
+  document.querySelectorAll('.transit-port-input').forEach((input, i) => {
+    const dateInputs = document.querySelectorAll('.transit-port-date');
+    const port = input.value.trim();
+    if (port) transitPorts.push({ port, date: fmtDate(dateInputs[i] ? dateInputs[i].value : '') });
+  });
+  const extraContainers = [];
+  document.querySelectorAll('.extra-container-input').forEach(input => {
+    const v = input.value.trim();
+    if (v) extraContainers.push(v);
+  });
+
+  return {
+    id: shipmentId,
+    shipper: val('shipperNameInput') || 'Unnamed Shipper',
+    consignee: val('consigneeNameInput'),
+    shipperAddress: val('shipperAddressInput'),
+    consigneeAddress: val('consigneeAddressInput'),
+    transportMode: val('transportModeSelect'),
+    shipmentType: val('shipmentTypeSelect'),
+    bookingDate: fmtDate(val('bookingDateInput')),
+    receiptDate: fmtDate(val('receiptDateInput')),
+    transactionNumber: val('transactionNumberInput'),
+    hbl: val('hblInput'),
+    mbl: val('mblInput'),
+    container: val('containerNumberInput') || '—',
+    ctype: val('containerTypeSelect'),
+    extraContainers: extraContainers,
+    transitPorts: transitPorts,
+    finalDestination: val('finalDestinationInput'),
+    finalDestinationDate: fmtDate(val('finalDestinationDateInput')),
+    pol: val('polInput') || '—',
+    pod: val('podInput') || 'Shuaiba, Kuwait',
+    etd: fmtDate(val('etdInput')),
+    eta: fmtDate(val('etaInput')),
+    status: val('statusSelect') || 'pending',
+    progress: parseInt(val('progressInput'), 10) || 0,
+    line: val('shippingLineInput'),
+    vessel: val('vesselInput'),
+    cargo: val('cargoDescInput'),
+    volume: val('volumeInput'),
+    qty: val('quantityInput'),
+    weight: val('weightInput') ? `${val('weightInput')} kg` : '',
+    ministry: ministry,
+    documents: documents,
+    foreignContractInvoiceNo: val('fciInput'),
+    invoiceAmount: val('invoiceAmountInput'),
+    customsDeclarationNo: val('customsDeclNoInput'),
+    customsDeclarationDate: fmtDate(val('customsDeclDateInput')),
+    customsDutyPaid: val('customsDutyInput'),
+    bankReceiptNo: val('bankReceiptNoInput'),
+    bankReceiptDate: fmtDate(val('bankReceiptDateInput')),
+  };
+}
+
+function resetAddForm() {
+  document.querySelectorAll('#adminAddPage input').forEach(i => { if (i.type !== 'date') i.value = ''; else i.value = ''; });
+  document.querySelectorAll('#adminAddPage select').forEach(s => { s.selectedIndex = 0; });
+  document.getElementById('podInput').value = 'Shuaiba, Kuwait';
+  document.getElementById('shipmentIdInput').value = `SIGN-P${String(shipments.length + 851).padStart(5, '0')}`;
+
+  // Clear dynamically added transit port / container rows
+  document.querySelectorAll('#transitPortRows .extra-row-item').forEach(r => r.remove());
+  document.getElementById('extraContainerRows').innerHTML = '';
+
+  pendingUploads = {};
+  handleTransportMode('Sea Freight');
+}
+
+// ─── UPDATE DASHBOARD / SIDEBAR COUNTS ───
+function updateCounts() {
+  const total = shipments.length;
+  const transit = shipments.filter(s => s.status === 'transit').length;
+  const arrived = shipments.filter(s => s.status === 'arrived').length;
+  const customs = shipments.filter(s => s.status === 'customs').length;
+  const setText = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  setText('statTotal', total);
+  setText('statTransit', transit);
+  setText('statArrived', arrived);
+  setText('statCustoms', customs);
+  setText('badgeAll', total);
+  setText('badgeTransit', transit);
+  setText('badgeArrived', arrived);
+  setText('badgeCustoms', customs);
+}
+
+// ─── REPORTS PAGE ───
+const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+function parseDMY(str) {
+  if (!str) return null;
+  const parts = str.split('/');
+  if (parts.length !== 3) return null;
+  const [d, m, y] = parts.map(n => parseInt(n, 10));
+  if (!d || !m || !y) return null;
+  return { day: d, month: m, year: y, key: `${y}-${String(m).padStart(2, '0')}` };
+}
+function populateReportMonths() {
+  const select = document.getElementById('reportMonthSelect');
+  const current = select.value || 'all';
+  const monthKeys = new Map();
+  shipments.forEach(s => {
+    const d = parseDMY(s.etd);
+    if (d) monthKeys.set(d.key, `${MONTH_NAMES[d.month - 1]} ${d.year}`);
+  });
+  const sortedKeys = Array.from(monthKeys.keys()).sort();
+  select.innerHTML = `<option value="all">All Months</option>` +
+    sortedKeys.map(k => `<option value="${k}">${monthKeys.get(k)}</option>`).join('');
+  if (sortedKeys.includes(current) || current === 'all') select.value = current;
+}
+function buildReports() {
+  populateReportMonths();
+  const monthVal = document.getElementById('reportMonthSelect').value;
+  const ministryVal = document.getElementById('reportMinistrySelect').value;
+
+  let list = shipments.filter(s => {
+    if (ministryVal !== 'all' && s.ministry !== ministryVal) return false;
+    if (monthVal !== 'all') {
+      const d = parseDMY(s.etd);
+      if (!d || d.key !== monthVal) return false;
+    }
+    return true;
+  });
+
+  const total = list.length;
+  const transit = list.filter(s => s.status === 'transit').length;
+  const arrived = list.filter(s => s.status === 'arrived').length;
+  const customs = list.filter(s => s.status === 'customs').length;
+  const delivered = list.filter(s => s.status === 'delivered').length;
+
+  document.getElementById('reportStatsRow').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-icon navy"><i class="ti ti-package"></i></div>
+      <div class="stat-label">Total Shipments</div>
+      <div class="stat-value">${total}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="ti ti-ship"></i></div>
+      <div class="stat-label">In Transit</div>
+      <div class="stat-value">${transit}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green"><i class="ti ti-circle-check"></i></div>
+      <div class="stat-label">Arrived</div>
+      <div class="stat-value">${arrived}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon warn"><i class="ti ti-alert-circle"></i></div>
+      <div class="stat-label">Customs</div>
+      <div class="stat-value">${customs}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon navy"><i class="ti ti-flag-check"></i></div>
+      <div class="stat-label">Delivered</div>
+      <div class="stat-value">${delivered}</div>
+    </div>`;
+
+  const monthLabel = monthVal === 'all' ? 'All months' : document.getElementById('reportMonthSelect').selectedOptions[0].textContent;
+  const ministryLabel = ministryVal === 'all' ? 'all ministries' : ministryVal;
+  document.getElementById('reportPeriodLabel').textContent = `${monthLabel} · ${ministryLabel}`;
+
+  document.getElementById('reportTableBody').innerHTML = list.map(s => `
+    <tr onclick="setAdminPage('list', document.querySelector('.sidebar-item'));setTimeout(()=>openDetail('${s.id}'),0);" style="cursor:pointer;">
+      <td><span class="shipment-id">${displayId(s)}</span></td>
+      <td>${s.shipper}</td>
+      <td><span class="cell-secondary">${s.ministry || '—'}</span></td>
+      <td>${s.etd}</td>
+      <td>${s.eta}</td>
+      <td>${badgeHTML(s.status)}</td>
+    </tr>`).join('') || `<tr><td colspan="6"><div class="empty-state"><i class="ti ti-package-off"></i><p>No shipments in this period</p></div></td></tr>`;
+}
+
+
+function saveNewShipment(ministry) {
+  const newShipment = collectShipmentFromForm(ministry);
+  shipments.unshift(newShipment);
+
+  updateCounts();
+  buildAdminTable('');
+  buildUserList();
+
   const btn = document.querySelector('.form-actions .btn-primary');
   const orig = btn.innerHTML;
   btn.innerHTML = `<i class="ti ti-check"></i> Saved to ${ministry}!`;
@@ -1759,8 +2201,9 @@ function showSaved(ministry) {
     btn.innerHTML = orig;
     btn.style.background = '';
     btn.style.borderColor = '';
+    resetAddForm();
     setAdminPage('list', document.querySelector('.sidebar-item'));
-  }, 1600);
+  }, 1400);
 }
 
 // ─── EXPORT CSV ───
@@ -1789,6 +2232,8 @@ setInterval(updateClock, 1000);
 
 // ─── INIT ───
 buildAdminTable('');
+updateCounts();
+handleTransportMode('Sea Freight');
 </script>
 </body>
 </html>
